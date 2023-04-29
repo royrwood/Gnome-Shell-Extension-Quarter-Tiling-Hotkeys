@@ -1,0 +1,8 @@
+{
+    "name": "Quarter Tiling Hotkeys",
+    "description": "Tile windows using hotkeys",
+    "uuid": "quartilehotkeys@example.com",
+    "shell-version": [
+      "43"
+    ]
+  }
