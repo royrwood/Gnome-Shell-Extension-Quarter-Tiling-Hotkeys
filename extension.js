@@ -39,7 +39,7 @@ class Extension {
             let keyBinding = this._keyBindings.get(bindingAction);
             let acceleratorString = keyBinding.acceleratorString;
             _log(`Removing keybinding for ${acceleratorString}`);
-            this._removeKeyBinding(bindingAction);
+            this._removeKeyBinding(bindingAction, keyBinding);
             // this._keyBindings.delete(bindingAction);
         }
 
