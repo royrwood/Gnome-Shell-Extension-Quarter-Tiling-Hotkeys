@@ -5,56 +5,98 @@ const Shell = imports.gi.Shell;
 const Main = imports.ui.main;
 
 
+var doLogging = true;
+var version = "0.1";
+
+var _log = function(msg) {
+	if (doLogging) {
+		console.log(`[QuarTileKeys] ${msg}`);
+	}
+}
+
+
+
 class Extension {
     constructor() {
-        this._version = '0.2';
         this._acceleratorActivatedId = null;
-        this._bindingAction = null;
-        this._bindingName = null;
+        this._keyBindings = new Map();
     }
 
     enable() {
-        console.log(`ROYTEST: Enabling ${Me.metadata.name} ${this._version}`);
+        _log(`Enabling ${Me.metadata.name} ${version}`);
 
-        console.log(`ROYTEST: Connecting to signal "accelerator-activated"`);
+        _log(`Connecting to signal "accelerator-activated"`);
         this._acceleratorActivatedId = global.display.connect('accelerator-activated', this._onAcceleratorActivated.bind(this));
 
-        console.log(`ROYTEST: Adding keybinding`);
-        this._bindingAction = global.display.grab_accelerator('<Control><Super><Alt>right', 0);
-        if (this._bindingAction == Meta.KeyBindingAction.NONE) {
-            console.log(`ROYTEST: Failed to add keybinding`);
-        } else {
-            console.log(`ROYTEST: Adding keybinding name for action`);
-
-            this._bindingName = Meta.external_binding_name_for_action(this._bindingAction);
-            Main.wm.allowKeybinding(this._bindingName, Shell.ActionMode.ALL);
-        }
+        _log(`Adding keybinding`);
+        let bindingAction = this._addKeyBinding('<Control><Super><Alt>right', null);
     }
 
     disable() {
-        console.log(`ROYTEST: disabling ${Me.metadata.name} ${this._version}`);
+        _log(`disabling ${Me.metadata.name} ${version}`);
 
-        if (this._bindingAction) {
-            console.log(`ROYTEST: Calling ungrab_accelerator()`);
-            global.display.ungrab_accelerator(this._bindingAction);
+        for (let bindingAction of this._keyBindings.keys()) {
+            let keyBinding = this._keyBindings.get(bindingAction);
+            let acceleratorString = keyBinding.acceleratorString;
+            _log(`Removing keybinding for ${acceleratorString}`);
+            this._removeKeyBinding(bindingAction);
+            // this._keyBindings.delete(bindingAction);
         }
-        if (this._bindingName) {
-            console.log(`ROYTEST: Calling allowKeybinding() with Shell.ActionMode.NONE`);
-            Main.wm.allowKeybinding(this._bindingName, Shell.ActionMode.NONE);
-        }
+
         if (this._acceleratorActivatedId) {
-            console.log(`ROYTEST: Disconnecting from signal "accelerator-activated"`);
+            _log(`Disconnecting from signal "accelerator-activated"`);
             global.display.disconnect(this._acceleratorActivatedId);
         }
     }
 
+    _addKeyBinding(acceleratorString, callbackFunc) {
+        _log(`Adding keybinding accelerator ${acceleratorString}`);
+
+        let bindingAction = global.display.grab_accelerator(acceleratorString, 0);
+
+        if (bindingAction == Meta.KeyBindingAction.NONE) {
+            _log(`Failed to add keybinding ${acceleratorString}`);
+            return null;
+        }
+        
+        _log(`Adding keybinding name for action${acceleratorString}`);
+
+        let bindingName = Meta.external_binding_name_for_action(bindingAction);
+        Main.wm.allowKeybinding(bindingName, Shell.ActionMode.ALL);
+
+        this._keyBindings.set(bindingAction, {name: bindingName, callback: callbackFunc, acceleratorString: acceleratorString});
+
+        return bindingAction;
+    }
+
+    _removeKeyBinding(bindingAction, keyBinding) {
+        let acceleratorString = keyBinding.acceleratorString;
+        let bindingName = keyBinding.bindingName;
+
+        _log(`Calling ungrab_accelerator() for ${acceleratorString}`);
+        global.display.ungrab_accelerator(bindingAction);
+
+        _log(`Calling allowKeybinding(Shell.ActionMode.NONE) for ${acceleratorString}`);
+        Main.wm.allowKeybinding(bindingName, Shell.ActionMode.NONE);
+    }
+
+
     _onAcceleratorActivated(display, action, deviceId, timestamp) {
-        console.log(`ROYTEST: Got "accelerator-activated" callback signal`);
+        _log(`Got "accelerator-activated" callback signal`);
 
         try {
-            console.log(`ROYTEST: Got "accelerator-activated" callback signal: action=${action}`);
+            let keyBinding = this._keyBindings.get(action);
+
+            if (keyBinding) {
+                let acceleratorString = keyBinding.acceleratorString;
+                _log(`Got "accelerator-activated" callback signal for ${acceleratorString}`);
+            }
+            else {
+                _log(`Got "accelerator-activated" callback signal for unknown acceleratorString`);
+            }
+
         } catch (e) {
-            console.log(`ROYTEST: Caught exception while logging`);
+            _log(`Caught exception ${e}`);
             logError(e);
         }
     }
@@ -63,7 +105,7 @@ class Extension {
 
 
 function init() {
-    console.log(`ROYTEST: initializing ${Me.metadata.name} ${this._version}`);
+    _log(`initializing ${Me.metadata.name} ${version}`);
 
     return new Extension();
 }
