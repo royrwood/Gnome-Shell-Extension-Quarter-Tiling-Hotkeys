@@ -16,6 +16,10 @@ gnome-extensions install --force ${EXTENSION_ID}.zip
 
 URLs:
 
+DConf, Gnome Settings, etc:
+https://www.makeuseof.com/access-hidden-gnome-desktop-settings-dconf-editor/
+
+
 Sample Gnome Shell Extension that uses "global.stage.connect":
 https://github.com/GNOME/gnome-shell-extensions/blob/9f88e98d1bfbd5f1b20c574c2c761765ebf1d939/extensions/windowsNavigator/extension.js
     global.stage.connect('key-press-event', this._onKeyPress.bind(this));

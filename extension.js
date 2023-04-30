@@ -6,14 +6,13 @@ const Main = imports.ui.main;
 
 
 var doLogging = true;
-var version = "0.4";
+var version = "0.6";
 
 var _log = function(msg) {
 	if (doLogging) {
 		console.log(`[QuarTileKeys] ${msg}`);
 	}
 }
-
 
 
 class Extension {
@@ -32,81 +31,51 @@ class Extension {
         let tileRightKeyCombo = this._settings.get_string('tile-right-hotkey');
         _log(`Got setting tileRightKeyCombo='${tileRightKeyCombo}'`);
 
-        _log(`Connecting to signal "accelerator-activated"`);
-        this._acceleratorActivatedId = global.display.connect('accelerator-activated', this._onAcceleratorActivated.bind(this));
-
-        _log(`Adding keybindings`);
-        this._addKeyBinding(tileRightKeyCombo, null);
-        this._addKeyBinding(tileLeftKeyCombo, null);
+        _log(`Adding key bindings`);
+        this._addKeyBinding('tile-left-hotkey', this._onTileLeft);
+        this._addKeyBinding('tile-right-hotkey', this._onTileRight);
+        _log(`Key bindings added`);
     }
 
     disable() {
         _log(`disabling ${Me.metadata.name} ${version}`);
 
-        for (let bindingAction of this._keyBindings.keys()) {
-            let keyBinding = this._keyBindings.get(bindingAction);
-            let acceleratorString = keyBinding.acceleratorString;
-            _log(`Removing keybinding for ${acceleratorString}`);
-            this._removeKeyBinding(bindingAction, keyBinding);
-            // this._keyBindings.delete(bindingAction);
-        }
-
-        if (this._acceleratorActivatedId) {
-            _log(`Disconnecting from signal "accelerator-activated"`);
-            global.display.disconnect(this._acceleratorActivatedId);
-        }
+        _log(`Removing key bindings`);
+        Main.wm.removeKeybinding('tile-left-hotkey');
+        Main.wm.removeKeybinding('tile-right-hotkey');
+        _log(`Key bindings removed`);
     }
 
-    _addKeyBinding(acceleratorString, callbackFunc) {
-        _log(`Adding keybinding accelerator ${acceleratorString}`);
-
-        let bindingAction = global.display.grab_accelerator(acceleratorString, 0);
-
-        if (bindingAction == Meta.KeyBindingAction.NONE) {
-            _log(`Failed to add keybinding ${acceleratorString}`);
-            return null;
-        }
+    _addKeyBinding(acceleratorSettingName, callbackFunc) {
+        _log(`Adding key binding accelerator ${acceleratorSettingName}`);
         
-        _log(`Adding keybinding name for action${acceleratorString}`);
+        // Meta.KeyBindingFlags.NONE
+        // Meta.KeyBindingFlags.PER_WINDOW
+        // Meta.KeyBindingFlags.BUILTIN
+        // Meta.KeyBindingFlags.IGNORE_AUTOREPEAT
+        let flag = Meta.KeyBindingFlags.NONE;
 
-        let bindingName = Meta.external_binding_name_for_action(bindingAction);
-        Main.wm.allowKeybinding(bindingName, Shell.ActionMode.ALL);
+        // Shell.ActionMode.NORMAL
+        // Shell.ActionMode.OVERVIEW
+        // Shell.ActionMode.LOCK_SCREEN
+        // Shell.ActionMode.ALL
+        let mode = Shell.ActionMode.ALL;
 
-        this._keyBindings.set(bindingAction, {name: bindingName, callback: callbackFunc, acceleratorString: acceleratorString});
-
-        return bindingAction;
-    }
-
-    _removeKeyBinding(bindingAction, keyBinding) {
-        let acceleratorString = keyBinding.acceleratorString;
-        let bindingName = keyBinding.bindingName;
-
-        _log(`Calling ungrab_accelerator() for ${acceleratorString}`);
-        global.display.ungrab_accelerator(bindingAction);
-
-        _log(`Calling allowKeybinding(Shell.ActionMode.NONE) for ${acceleratorString}`);
-        Main.wm.allowKeybinding(bindingName, Shell.ActionMode.NONE);
-    }
-
-
-    _onAcceleratorActivated(display, action, deviceId, timestamp) {
-        _log(`Got "accelerator-activated" callback signal`);
-
-        try {
-            let keyBinding = this._keyBindings.get(action);
-
-            if (keyBinding) {
-                let acceleratorString = keyBinding.acceleratorString;
-                _log(`Got "accelerator-activated" callback signal for ${acceleratorString}`);
-            }
-            else {
-                _log(`Got "accelerator-activated" callback signal for unknown acceleratorString`);
-            }
-
-        } catch (e) {
-            _log(`Caught exception ${e}`);
-            logError(e);
+        let bindingResult = Main.wm.addKeybinding(acceleratorSettingName, this._settings, flag, mode, callbackFunc);
+        if (bindingResult == Meta.KeyBindingAction.NONE) {
+            _log(`Could not bind ${acceleratorSettingName}`)
         }
+        else {
+            _log(`Bound ${acceleratorSettingName}: bindingResult=${bindingResult}`)
+        }
+    }
+
+    _onTileLeft() {
+        _log(`Callback _onTileLeft`);
+    }
+
+    _onTileRight() {
+        _log(`Callback _onTileRight`);
     }
 
 }
@@ -117,3 +86,15 @@ function init() {
 
     return new Extension();
 }
+
+
+
+
+
+// for (let bindingAction of this._keyBindings.keys()) {
+//     let keyBinding = this._keyBindings.get(bindingAction);
+//     let acceleratorString = keyBinding.acceleratorString;
+//     _log(`Removing keybinding for ${acceleratorString}`);
+//     this._removeKeyBinding(bindingAction, keyBinding);
+//     // this._keyBindings.delete(bindingAction);
+// }
