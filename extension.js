@@ -6,7 +6,7 @@ const Main = imports.ui.main;
 
 
 var doLogging = true;
-var version = "0.2";
+var version = "0.3";
 
 var _log = function(msg) {
 	if (doLogging) {
@@ -26,16 +26,18 @@ class Extension {
         _log(`Enabling ${Me.metadata.name} ${version}`);
 
         _log(`Getting settings`);
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.roytest');
-        let myString = this._settings.get_string('my-string');
-        _log(`Got setting myString='${myString}'`);
+        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+        let tileLeftKeyCombo = this._settings.get_string('tile-left-hotkey');
+        _log(`Got setting tileLeftKeyCombo='${tileLeftKeyCombo}'`);
+        let tileRightKeyCombo = this._settings.get_string('tile-right-hotkey');
+        _log(`Got setting tileRightKeyCombo='${tileRightKeyCombo}'`);
 
         _log(`Connecting to signal "accelerator-activated"`);
         this._acceleratorActivatedId = global.display.connect('accelerator-activated', this._onAcceleratorActivated.bind(this));
 
         _log(`Adding keybindings`);
-        this._addKeyBinding('<Control><Super><Alt>right', null);
-        this._addKeyBinding('<Control><Super><Alt>left', null);
+        this._addKeyBinding(tileRightKeyCombo, null);
+        this._addKeyBinding(tileLeftKeyCombo, null);
     }
 
     disable() {
