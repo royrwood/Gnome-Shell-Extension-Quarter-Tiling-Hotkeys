@@ -6,7 +6,7 @@ const Main = imports.ui.main;
 
 
 var doLogging = true;
-var version = "0.1";
+var version = "0.2";
 
 var _log = function(msg) {
 	if (doLogging) {
@@ -25,11 +25,17 @@ class Extension {
     enable() {
         _log(`Enabling ${Me.metadata.name} ${version}`);
 
+        _log(`Getting settings`);
+        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.roytest');
+        let myString = this._settings.get_string('my-string');
+        _log(`Got setting myString='${myString}'`);
+
         _log(`Connecting to signal "accelerator-activated"`);
         this._acceleratorActivatedId = global.display.connect('accelerator-activated', this._onAcceleratorActivated.bind(this));
 
-        _log(`Adding keybinding`);
-        let bindingAction = this._addKeyBinding('<Control><Super><Alt>right', null);
+        _log(`Adding keybindings`);
+        this._addKeyBinding('<Control><Super><Alt>right', null);
+        this._addKeyBinding('<Control><Super><Alt>left', null);
     }
 
     disable() {
