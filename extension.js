@@ -72,6 +72,23 @@ class Extension {
 
     _onTileLeft() {
         _log(`Callback _onTileLeft`);
+
+        let app = global.display.focus_window;
+
+        let appFrameRect = app.get_frame_rect()
+        _log("appFrameRect.x: "+appFrameRect.x+" appFrameRect.y: "+appFrameRect.y+" appFrameRect.width: "+appFrameRect.width+" appFrameRect.height: "+appFrameRect.height)
+
+        let monitorWorkArea = app.get_work_area_current_monitor()
+        _log("monitorWorkArea.x: "+monitorWorkArea.x+" monitorWorkArea.y: "+monitorWorkArea.y+" monitorWorkArea.width: "+monitorWorkArea.width+" monitorWorkArea.height: "+monitorWorkArea.height)
+
+        let curMonitor = app.get_monitor();
+        _log("curMonitor: "+curMonitor)
+
+        let workspace = app.get_workspace()
+        _log("workspace: "+workspace)
+        let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
+        _log("workspaceArea: "+workspaceArea)
+        _log("workspaceArea.x: "+workspaceArea.x+" workspaceArea.y: "+workspaceArea.y+" workspaceArea.width: "+workspaceArea.width+" workspaceArea.height: "+workspaceArea.height)
     }
 
     _onTileRight() {
