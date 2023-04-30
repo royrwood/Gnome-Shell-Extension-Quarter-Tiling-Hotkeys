@@ -2,13 +2,13 @@
 <schemalist>  
   <schema id="org.gnome.shell.extensions.quarter-tiling-hotkeys" path="/org/gnome/shell/extensions/quarter-tiling-hotkeys/">
     <key type="s" name="tile-left-hotkey">
-      <default>"&lt;Control&gt;&lt;Super&gt;&lt;Alt&gt;left"</default>
+      <default><![CDATA["<Control><Super><Alt>left"]]></default>
       <summary>Accelerator key combination to tile window left</summary>
       <description>Accelerator key combination to tile window left</description>
     </key>
         
     <key type="s" name="tile-right-hotkey">
-      <default>"&lt;Control&gt;&lt;Super&gt;&lt;Alt&gt;right"</default>
+      <default><![CDATA["<Control><Super><Alt>right"]]></default>
       <summary>Accelerator key combination to tile window right</summary>
       <description>Accelerator key combination to tile window right</description>
     </key>
