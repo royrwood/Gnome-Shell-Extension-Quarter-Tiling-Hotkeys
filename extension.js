@@ -34,6 +34,8 @@ class Extension {
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey', this._onTileLeft);
         this._addKeyBinding('tile-right-hotkey', this._onTileRight);
+        this._addKeyBinding('tile-up-hotkey', this._onTileUp);
+        this._addKeyBinding('tile-down-hotkey', this._onTileDown);
         _log(`Key bindings added`);
     }
 
@@ -43,6 +45,8 @@ class Extension {
         _log(`Removing key bindings`);
         Main.wm.removeKeybinding('tile-left-hotkey');
         Main.wm.removeKeybinding('tile-right-hotkey');
+        Main.wm.removeKeybinding('tile-up-hotkey');
+        Main.wm.removeKeybinding('tile-down-hotkey');
         _log(`Key bindings removed`);
     }
 
@@ -106,14 +110,93 @@ class Extension {
         //     app.unmaximize(Meta.MaximizeFlags.BOTH);
         // }
 
+        // GNOME Shell-Message: 17:58:10.709: [QuarTileKeys] appFrameRect.x: 70 appFrameRect.y: 27 appFrameRect.width: 900 appFrameRect.height: 900
+        // GNOME Shell-Message: 17:58:10.710: [QuarTileKeys] appBufferRect.x: 9 appBufferRect.y: -28 appBufferRect.width: 1022 appBufferRect.height: 1022
+        // GNOME Shell-Message: 17:58:10.711: [QuarTileKeys] maximized_horizontally: false maximizedVertically:false
+        // GNOME Shell-Message: 17:58:10.712: [QuarTileKeys] monitorWorkArea.x: 70 monitorWorkArea.y: 27 monitorWorkArea.width: 1850 monitorWorkArea.height: 1053
+        // GNOME Shell-Message: 17:58:10.712: [QuarTileKeys] curMonitor: 0
+        // GNOME Shell-Message: 17:58:10.713: [QuarTileKeys] workspace: [object instance wrapper GIName:Meta.Workspace jsobj@0x1ac8dddc0e20 native@0x556e065d2d60]
+        // GNOME Shell-Message: 17:58:10.713: [QuarTileKeys] workspaceArea: [boxed instance wrapper GIName:Meta.Rectangle jsobj@0x1b29f269a970 native@0x556e09feaab0]
+        // GNOME Shell-Message: 17:58:10.714: [QuarTileKeys] workspaceArea.x: 70 workspaceArea.y: 27 workspaceArea.width: 1850 workspaceArea.height: 1053
+
+
+        let x = workspaceArea.x;
+        let y = workspaceArea.y;
+        let width = Math.round(workspaceArea.width / 2);
+        let height = Math.round(workspaceArea.height);
+        
         _log("move_resize_frame before")
         appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
-        appWindow.move_resize_frame(true, 100, 50, 900, 900);
+        appWindow.move_resize_frame(true, x, y, width, height);
         _log("move_resize_frame after")
     }
 
     _onTileRight() {
-        _log(`Callback _onTileRight`);
+        _log("Callback _onTileRight");
+        let appWindow = global.display.focus_window;
+        let curMonitor = appWindow.get_monitor();
+        let workspace = appWindow.get_workspace()
+        let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
+
+        let x = workspaceArea.x + Math.round(workspaceArea.width / 2);
+        let y = workspaceArea.y;
+        let width = Math.round(workspaceArea.width / 2);
+        let height = Math.round(workspaceArea.height);
+        
+        _log("move_resize_frame before")
+        appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
+        appWindow.move_resize_frame(true, x, y, width, height);
+        _log("move_resize_frame after")
+    }
+
+    _onTileUp() {
+        _log("Callback _onTileUp");
+        let appWindow = global.display.focus_window;
+        let appFrameRect = appWindow.get_frame_rect()
+        let curMonitor = appWindow.get_monitor();
+        let workspace = appWindow.get_workspace()
+        let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
+
+        let centerX = workspaceArea.x + Math.round(workspaceArea.width / 2);
+        let leftX = appFrameRect.x;
+        let rightX = appFrameRect.x + appFrameRect.width;
+        let leftWidth = (leftX < centerX) ? centerX - leftX : 0;
+        let rightWidth = (rightX > centerX) ? rightX - centerX : 0;
+
+        let x = (leftWidth >= rightWidth) ? workspaceArea.x : workspaceArea.x + Math.round(workspaceArea.width / 2);
+        let y = workspaceArea.y;
+        let width = Math.round(workspaceArea.width / 2);
+        let height = Math.round(workspaceArea.height / 2);
+        
+        _log("move_resize_frame before")
+        appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
+        appWindow.move_resize_frame(true, x, y, width, height);
+        _log("move_resize_frame after")
+    }
+
+    _onTileDown() {
+        _log("Callback _onTileDown");
+        let appWindow = global.display.focus_window;
+        let appFrameRect = appWindow.get_frame_rect()
+        let curMonitor = appWindow.get_monitor();
+        let workspace = appWindow.get_workspace()
+        let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
+
+        let centerX = workspaceArea.x + Math.round(workspaceArea.width / 2);
+        let leftX = appFrameRect.x;
+        let rightX = appFrameRect.x + appFrameRect.width;
+        let leftWidth = (leftX < centerX) ? centerX - leftX : 0;
+        let rightWidth = (rightX > centerX) ? rightX - centerX : 0;
+
+        let x = (leftWidth >= rightWidth) ? workspaceArea.x : workspaceArea.x + Math.round(workspaceArea.width / 2);
+        let y = workspaceArea.y + Math.round(workspaceArea.height / 2);
+        let width = Math.round(workspaceArea.width / 2);
+        let height = Math.round(workspaceArea.height / 2);
+        
+        _log("move_resize_frame before")
+        appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
+        appWindow.move_resize_frame(true, x, y, width, height);
+        _log("move_resize_frame after")
     }
 
 }

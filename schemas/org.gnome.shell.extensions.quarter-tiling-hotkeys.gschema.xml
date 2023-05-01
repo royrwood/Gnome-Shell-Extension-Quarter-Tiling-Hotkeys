@@ -12,5 +12,17 @@
       <summary>Accelerator key combination to tile window right</summary>
       <description>Accelerator key combination to tile window right</description>
     </key>
+        
+    <key type="as" name="tile-up-hotkey">
+      <default><![CDATA[['<Control><Super><Alt>up']]]></default>
+      <summary>Accelerator key combination to tile window up</summary>
+      <description>Accelerator key combination to tile window up</description>
+    </key>
+        
+    <key type="as" name="tile-down-hotkey">
+      <default><![CDATA[['<Control><Super><Alt>down']]]></default>
+      <summary>Accelerator key combination to tile window down</summary>
+      <description>Accelerator key combination to tile window down</description>
+    </key>
   </schema>
 </schemalist>
