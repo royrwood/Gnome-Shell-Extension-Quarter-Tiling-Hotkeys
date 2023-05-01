@@ -6,7 +6,7 @@ const Main = imports.ui.main;
 
 
 var doLogging = true;
-var version = "0.6";
+var version = "0.1.5";
 
 var _log = function(msg) {
 	if (doLogging) {
@@ -73,22 +73,43 @@ class Extension {
     _onTileLeft() {
         _log(`Callback _onTileLeft`);
 
-        let app = global.display.focus_window;
+        let appWindow = global.display.focus_window;
+        _log("appWindow:"+appWindow)
 
-        let appFrameRect = app.get_frame_rect()
+        let appWindowID = appWindow.get_id();
+        _log("appWindowID:"+appWindowID)
+
+        let appFrameRect = appWindow.get_frame_rect()
         _log("appFrameRect.x: "+appFrameRect.x+" appFrameRect.y: "+appFrameRect.y+" appFrameRect.width: "+appFrameRect.width+" appFrameRect.height: "+appFrameRect.height)
 
-        let monitorWorkArea = app.get_work_area_current_monitor()
+        let appBufferRect = appWindow.get_buffer_rect()
+        _log("appBufferRect.x: "+appBufferRect.x+" appBufferRect.y: "+appBufferRect.y+" appBufferRect.width: "+appBufferRect.width+" appBufferRect.height: "+appBufferRect.height)
+        
+        let maximized_horizontally = appWindow.maximized_horizontally
+        let maximizedVertically = appWindow.maximizedVertically
+        _log("maximized_horizontally: "+maximized_horizontally+" maximizedVertically:"+maximizedVertically)
+
+        let monitorWorkArea = appWindow.get_work_area_current_monitor()
         _log("monitorWorkArea.x: "+monitorWorkArea.x+" monitorWorkArea.y: "+monitorWorkArea.y+" monitorWorkArea.width: "+monitorWorkArea.width+" monitorWorkArea.height: "+monitorWorkArea.height)
 
-        let curMonitor = app.get_monitor();
+        let curMonitor = appWindow.get_monitor();
         _log("curMonitor: "+curMonitor)
 
-        let workspace = app.get_workspace()
+        let workspace = appWindow.get_workspace()
         _log("workspace: "+workspace)
         let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
         _log("workspaceArea: "+workspaceArea)
         _log("workspaceArea.x: "+workspaceArea.x+" workspaceArea.y: "+workspaceArea.y+" workspaceArea.width: "+workspaceArea.width+" workspaceArea.height: "+workspaceArea.height)
+
+        // app.maximize(Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL);
+        // if (app.maximized_horizontally || app.maximized_vertically) {
+        //     app.unmaximize(Meta.MaximizeFlags.BOTH);
+        // }
+
+        _log("move_resize_frame before")
+        appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
+        appWindow.move_resize_frame(true, 100, 50, 900, 900);
+        _log("move_resize_frame after")
     }
 
     _onTileRight() {
@@ -115,3 +136,5 @@ function init() {
 //     this._removeKeyBinding(bindingAction, keyBinding);
 //     // this._keyBindings.delete(bindingAction);
 // }
+
+// _shortcutsBindingIds.forEach((id) => Main.wm.removeKeybinding(id))

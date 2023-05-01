@@ -1,8 +1,9 @@
 Gnome Shell Extension to Support Quarter Tiling of Windows
-
+==========================================================
 
 
 Notes:
+======
 
 gnome-extensions enable roytest@example.com
 
@@ -15,6 +16,12 @@ gnome-extensions install --force ${EXTENSION_ID}.zip
 
 
 URLs:
+=====
+
+Gnome gjs "Meta" API:
+https://gjs-docs.gnome.org/meta12~12/meta.window#method-move_resize_frame
+https://gjs-docs.gnome.org/meta12~12/meta.display
+
 
 DConf, Gnome Settings, etc:
 https://www.makeuseof.com/access-hidden-gnome-desktop-settings-dconf-editor/
@@ -68,6 +75,10 @@ https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/core/keybindings.c
 
 PaperWM Notes:
 https://github.com/paperwm/PaperWM/blob/develop/notes.org
+
+
+Why you can't access Gnome Shell internals from a stand-alone app:
+https://mail.gnome.org/archives/javascript-list/2012-January/msg00001.html
 
 
 Awesome Tiles:
