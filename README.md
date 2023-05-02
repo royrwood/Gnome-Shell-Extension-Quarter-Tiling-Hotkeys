@@ -23,6 +23,10 @@ https://gjs-docs.gnome.org/meta12~12/meta.window#method-move_resize_frame
 https://gjs-docs.gnome.org/meta12~12/meta.display
 
 
+Source for "ui" import:
+https://gitlab.gnome.org/GNOME/gnome-shell/-/tree/main/js/ui
+
+
 DConf, Gnome Settings, etc:
 https://www.makeuseof.com/access-hidden-gnome-desktop-settings-dconf-editor/
 
