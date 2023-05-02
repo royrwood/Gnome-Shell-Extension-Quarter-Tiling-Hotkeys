@@ -15,40 +15,6 @@ var _log = function(msg) {
 }
 
 
-// function doWindowMoveResize(directionStr) {
-//     _log("Callback _onTileDown");
-//     let appWindow = global.display.focus_window;
-//     let appFrameRect = appWindow.get_frame_rect()
-//     let curMonitor = appWindow.get_monitor();
-//     let workspace = appWindow.get_workspace()
-//     let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
-
-//     let centerX = workspaceArea.x + Math.round(workspaceArea.width / 2);
-//     let leftX = appFrameRect.x;
-//     let rightX = appFrameRect.x + appFrameRect.width;
-//     let windowMostlyLeft = (centerX - leftX) > (rightX - centerX);
-
-//     let centerY = workspaceArea.y + Math.round(workspaceArea.height / 2);
-//     let topY = appFrameRect.y;
-//     let bottomY = appFrameRect.y + appFrameRect.height;
-//     let windowMostlyTop = (centerY - topY) > (bottomY - centerY);
-
-//     let x, y, width, height;
-
-//     if (directionStr == 'DOWN') {
-//         x = (windowMostlyLeft) ? workspaceArea.x : workspaceArea.x + Math.round(workspaceArea.width / 2);
-//         y = workspaceArea.y + Math.round(workspaceArea.height / 2);
-//         width = Math.round(workspaceArea.width / 2);
-//         height = Math.round(workspaceArea.height / 2);
-//     }
-
-//     _log("move_resize_frame before")
-//     appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
-//     appWindow.move_resize_frame(true, x, y, width, height);
-//     _log("move_resize_frame after")
-// }
-
-
 class Extension {
     constructor() {
         // Nothing to do, for now...
@@ -146,7 +112,18 @@ class Extension {
         let topY = appFrameRect.y;
         let bottomY = appFrameRect.y + appFrameRect.height;
         let windowMostlyTop = (centerY - topY) > (bottomY - centerY);
+
+        let isHalfWidth = appFrameRect.width == Math.round(workspaceArea.width / 2);
+        let isHalfHeight = appFrameRect.height == Math.round(workspaceArea.height / 2);
+        let isAlignedLeft = appFrameRect.x == workspaceArea.x;
+        let isAlignedRight = Math.abs((appFrameRect.x + appFrameRect.width) - (workspaceArea.x + workspaceArea.width)) <= 1;
+        let isAlignedTop = appFrameRect.y == workspaceArea.y;
+        let isAlignedBottom = Math.abs((appFrameRect.y + appFrameRect.height) - (workspaceArea.y + workspaceArea.height)) <= 1;
     
+        _log(`Flags: appFrameRect.x=${appFrameRect.x}, appFrameRect.y=${appFrameRect.y}, appFrameRect.width=${appFrameRect.width}, appFrameRect.height=${appFrameRect.height}`)
+        _log(`Flags: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`)
+        _log(`Flags: isAlignedTop=${isAlignedTop}, isAlignedBottom=${isAlignedBottom}, isAlignedLeft=${isAlignedLeft}, isAlignedRight=${isAlignedRight} isHalfWidth=${isHalfWidth} isHalfHeight=${isHalfHeight}`)
+
         let x, y, width, height;
     
         if (directionStr == 'TOP') {
@@ -166,12 +143,34 @@ class Extension {
             y = workspaceArea.y;
             width = Math.round(workspaceArea.width / 2);
             height = workspaceArea.height;
+
+            if (isHalfHeight && isHalfWidth && isAlignedRight) {
+                if (isAlignedTop) {
+                    y = workspaceArea.y;
+                    height = Math.round(workspaceArea.height / 2);
+                }
+                else if (isAlignedBottom) {
+                    y = workspaceArea.y + Math.round(workspaceArea.height / 2);
+                    height = Math.round(workspaceArea.height / 2);
+                }
+            }
         }
         else if (directionStr == 'RIGHT') {
             x = workspaceArea.x + Math.round(workspaceArea.width / 2);
             y = workspaceArea.y;
             width = Math.round(workspaceArea.width / 2);
             height = workspaceArea.height;
+
+            if (isHalfHeight && isHalfWidth && isAlignedLeft) {
+                if (isAlignedTop) {
+                    y = workspaceArea.y;
+                    height = Math.round(workspaceArea.height / 2);
+                }
+                else if (isAlignedBottom) {
+                    y = workspaceArea.y + Math.round(workspaceArea.height / 2);
+                    height = Math.round(workspaceArea.height / 2);
+                }
+            }
         }
     
         _log(`Calling move_resize_frame(${x}, ${y}, ${width}, ${height})`)
