@@ -113,12 +113,14 @@ class Extension {
         let bottomY = appFrameRect.y + appFrameRect.height;
         let windowMostlyTop = (centerY - topY) > (bottomY - centerY);
 
-        let isHalfWidth = appFrameRect.width == Math.round(workspaceArea.width / 2);
-        let isHalfHeight = appFrameRect.height == Math.round(workspaceArea.height / 2);
         let isAlignedLeft = appFrameRect.x == workspaceArea.x;
-        let isAlignedRight = Math.abs((appFrameRect.x + appFrameRect.width) - (workspaceArea.x + workspaceArea.width)) <= 1;
         let isAlignedTop = appFrameRect.y == workspaceArea.y;
+        let isAlignedRight = Math.abs((appFrameRect.x + appFrameRect.width) - (workspaceArea.x + workspaceArea.width)) <= 1;
         let isAlignedBottom = Math.abs((appFrameRect.y + appFrameRect.height) - (workspaceArea.y + workspaceArea.height)) <= 1;
+        let isFullWidth = Math.abs(appFrameRect.width - workspaceArea.width) <= 1;
+        let isFullHeight = Math.abs(appFrameRect.height - workspaceArea.height) <= 1;
+        let isHalfWidth = Math.abs(appFrameRect.width - Math.round(workspaceArea.width / 2)) <= 1;
+        let isHalfHeight = Math.abs(appFrameRect.height - Math.round(workspaceArea.height / 2)) <= 1;
     
         _log(`Flags: appFrameRect.x=${appFrameRect.x}, appFrameRect.y=${appFrameRect.y}, appFrameRect.width=${appFrameRect.width}, appFrameRect.height=${appFrameRect.height}`)
         _log(`Flags: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`)
@@ -139,37 +141,47 @@ class Extension {
             height = Math.round(workspaceArea.height / 2);
         }
         else if (directionStr == 'LEFT') {
+            // Default is to fill the left half of the monitor
             x = workspaceArea.x;
             y = workspaceArea.y;
             width = Math.round(workspaceArea.width / 2);
             height = workspaceArea.height;
 
-            if (isHalfHeight && isHalfWidth && isAlignedRight) {
-                if (isAlignedTop) {
-                    y = workspaceArea.y;
-                    height = Math.round(workspaceArea.height / 2);
-                }
-                else if (isAlignedBottom) {
-                    y = workspaceArea.y + Math.round(workspaceArea.height / 2);
-                    height = Math.round(workspaceArea.height / 2);
-                }
+            // If it is half-height, is touching top or bottom, and is not touching the left side, move it left without resizing
+            if (isHalfHeight && (isAlignedTop || isAlignedBottom) && !isAlignedLeft) {
+                x = workspaceArea.x;
+                y = isAlignedTop ? workspaceArea.y : workspaceArea.y + Math.round(workspaceArea.height / 2);
+                width = appFrameRect.width;
+                height = appFrameRect.height;
+            }
+            // If it is half-height, is touching top or bottom, is touching the left side, and is not half-width, resize it to half-width
+            else if (isHalfHeight && (isAlignedTop || isAlignedBottom) && isAlignedLeft && !isHalfWidth) {
+                x = workspaceArea.x;
+                y = isAlignedTop ? workspaceArea.y : workspaceArea.y + Math.round(workspaceArea.height / 2);
+                width = Math.round(workspaceArea.width / 2);
+                height = appFrameRect.height;
             }
         }
         else if (directionStr == 'RIGHT') {
+            // Default is to fill the right half of the monitor
             x = workspaceArea.x + Math.round(workspaceArea.width / 2);
             y = workspaceArea.y;
             width = Math.round(workspaceArea.width / 2);
             height = workspaceArea.height;
 
-            if (isHalfHeight && isHalfWidth && isAlignedLeft) {
-                if (isAlignedTop) {
-                    y = workspaceArea.y;
-                    height = Math.round(workspaceArea.height / 2);
-                }
-                else if (isAlignedBottom) {
-                    y = workspaceArea.y + Math.round(workspaceArea.height / 2);
-                    height = Math.round(workspaceArea.height / 2);
-                }
+            // If it is half-height, is touching top or bottom, and is not touching the right side, move it right without resizing
+            if (isHalfHeight && (isAlignedTop || isAlignedBottom) && !isAlignedRight) {
+                x = workspaceArea.x + workspaceArea.width - appFrameRect.width;
+                y = isAlignedTop ? workspaceArea.y : workspaceArea.y + Math.round(workspaceArea.height / 2);
+                width = appFrameRect.width;
+                height = appFrameRect.height;
+            }
+            // If it is half-height, is touching top or bottom, is touching the right side, and is not half-width, resize it to half-width
+            else if (isHalfHeight && (isAlignedTop || isAlignedBottom) && isAlignedRight && !isHalfWidth) {
+                x = workspaceArea.x + Math.round(workspaceArea.width / 2);
+                y = isAlignedTop ? workspaceArea.y : workspaceArea.y + Math.round(workspaceArea.height / 2);
+                width = Math.round(workspaceArea.width / 2);
+                height = appFrameRect.height;
             }
         }
     
