@@ -18,6 +18,10 @@ gnome-extensions install --force ${EXTENSION_ID}.zip
 URLs:
 =====
 
+Meta Docs:
+https://gnome.pages.gitlab.gnome.org/mutter/meta/index.html
+
+
 Gnome gjs "Meta" API:
 https://gjs-docs.gnome.org/meta12~12/meta.window#method-move_resize_frame
 https://gjs-docs.gnome.org/meta12~12/meta.display
