@@ -161,7 +161,7 @@ class Extension {
             if (isHalfWidth && (isAlignedLeft || isAlignedRight) && !isAlignedBottom) {
                 x = isAlignedLeft ? workspaceArea.x : workspaceArea.x + Math.round(workspaceArea.width / 2);
                 y = workspaceArea.y + workspaceArea.height - appFrameRect.height;
-                width = Math.round(workspaceArea.widheight / 2);
+                width = Math.round(workspaceArea.width / 2);
                 height = appFrameRect.height;
             }
             // If it is half-width, is touching left or right, is touching the bottom side, and is not half-height, resize it to half-height
