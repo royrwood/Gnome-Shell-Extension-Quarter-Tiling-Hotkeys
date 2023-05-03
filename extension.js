@@ -17,18 +17,13 @@ var _log = function(msg) {
 
 class Extension {
     constructor() {
-        // Nothing to do, for now...
+        this._settings = null;
     }
 
     enable() {
         _log(`Enabling ${Me.metadata.name} ${version}`);
 
-        _log(`Getting settings`);
         this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
-        // let tileLeftKeyCombo = this._settings.get_string('tile-left-hotkey');
-        // _log(`Got setting tileLeftKeyCombo='${tileLeftKeyCombo}'`);
-        // let tileRightKeyCombo = this._settings.get_string('tile-right-hotkey');
-        // _log(`Got setting tileRightKeyCombo='${tileRightKeyCombo}'`);
 
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey', this._onTileLeft.bind(this));
@@ -39,7 +34,7 @@ class Extension {
     }
 
     disable() {
-        _log(`disabling ${Me.metadata.name} ${version}`);
+        _log(`Disabling ${Me.metadata.name} ${version}`);
 
         _log(`Removing key bindings`);
         Main.wm.removeKeybinding('tile-left-hotkey');
@@ -50,7 +45,8 @@ class Extension {
     }
 
     _addKeyBinding(acceleratorSettingName, callbackFunc) {
-        _log(`Adding key binding accelerator ${acceleratorSettingName}`);
+        let keyCombo = this._settings.get_strv(acceleratorSettingName);
+        _log(`Adding key binding '${acceleratorSettingName}'='${keyCombo}'`);
         
         // Meta.KeyBindingFlags.NONE
         // Meta.KeyBindingFlags.PER_WINDOW
