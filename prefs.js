@@ -13,7 +13,7 @@ function buildPrefsWidget () {
 
     let gtkListBox = new Gtk.ListBox({ "selection-mode": Gtk.SelectionMode.NONE });
     // gtkFrame.set_child(gtkListBox);
-    gtkBox.append(gtkListBox, true, false, 10);
+    gtkBox.append(gtkListBox);
 
     // let gtkListBoxRow = new Gtk.ListBoxRow();
     // gtkListBox.append(gtkListBoxRow);
@@ -27,6 +27,10 @@ function buildPrefsWidget () {
 
     let gtkButton = new Gtk.Button({ "label": "A Button" });
     gtkRowBox.append(gtkButton);
+
+    gtkButton.connect('clicked', () => {
+        log('The button was clicked');
+    });
 
     return gtkBox;
 }
