@@ -6,35 +6,34 @@ function init () {
 }
 
 function buildPrefsWidget () {
-    let gtkBox = new Gtk.Box({ "height-request": 500, "width-request": 700, "orientation": Gtk.Orientation.VERTICAL });
+    let mainGtkBox = new Gtk.Box({ "height-request": 50, "width-request": 70, "orientation": Gtk.Orientation.VERTICAL });
 
-    // let gtkFrame = new Gtk.Frame({ "halign": Gtk.Align.CENTER, "margin-start": 36, "margin-end": 36, "margin-top": 18, "margin-bottom": 18 });
-    // gtkBox.append(gtkFrame, true, false, 10);
+    let mainGtkFrame = new Gtk.Frame({ "halign": Gtk.Align.CENTER, "margin-start": 25, "margin-end": 25, "margin-top": 25, "margin-bottom": 25 });
+    mainGtkBox.append(mainGtkFrame, true, false, 10);
 
-    let gtkListBox = new Gtk.ListBox({ "selection-mode": Gtk.SelectionMode.NONE });
-    // gtkFrame.set_child(gtkListBox);
-    gtkBox.append(gtkListBox);
+    let mainGtkListBox = new Gtk.ListBox({ "selection-mode": Gtk.SelectionMode.NONE });
+    mainGtkFrame.set_child(mainGtkListBox);
 
-    // let gtkListBoxRow = new Gtk.ListBoxRow();
-    // gtkListBox.append(gtkListBoxRow);
+    for (let i = 0; i < 5; i++) {
+        let rowGtkListBoxRow = new Gtk.ListBoxRow();
+        mainGtkListBox.append(rowGtkListBoxRow);
 
-    let gtkRowBox = new Gtk.Box({ "orientation": Gtk.Orientation.HORIZONTAL });
-    // gtkListBoxRow.set_child(gtkRowBox);
-    gtkListBox.append(gtkRowBox);
+        let rowGtkBox = new Gtk.Box({ "orientation": Gtk.Orientation.HORIZONTAL, "margin-start": 15, "margin-end": 15, "margin-top": 15, "margin-bottom": 15, "spacing": 25 });
+        rowGtkListBoxRow.set_child(rowGtkBox);
 
-    let gtkLabel = new Gtk.Label({ "label": "This is some text" });
-    gtkRowBox.append(gtkLabel);
+        let gtkLabel = new Gtk.Label({ "label": "This is some text" });
+        rowGtkBox.append(gtkLabel);
 
-    let gtkButton = new Gtk.Button({ "label": "A Button" });
-    gtkRowBox.append(gtkButton);
+        let gtkButton = new Gtk.Button({ "label": "A Button", "hexpand": true, "halign": Gtk.Align.END, "valign": Gtk.Align.CENTER });
+        rowGtkBox.append(gtkButton);
 
-    gtkButton.connect('clicked', () => {
-        log('The button was clicked');
-    });
+        gtkButton.connect('clicked', () => {
+            log('The button was clicked');
+        });
+    }
 
-    return gtkBox;
+    return mainGtkBox;
 }
-
 
 /*
   <template class="AwesomeTilesPrefsWidget" parent="GtkBox">

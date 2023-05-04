@@ -18,6 +18,10 @@ gnome-extensions install --force ${EXTENSION_ID}.zip
 URLs:
 =====
 
+Gtk4 Widget Reference:
+https://docs.gtk.org/gtk4/class.Box.html
+
+
 Gjs/Gtk4 Example:
 https://gitlab.gnome.org/GNOME/gjs/-/blob/master/examples/gtk4.js
 
