@@ -13,7 +13,7 @@ var _log = function(msg) {
 		console.log(`[QuarTileKeys] ${msg}`);
 	}
 }
-paddingpadding
+
 
 class Extension {
     constructor() {
@@ -32,7 +32,7 @@ class Extension {
         this._addKeyBinding('tile-down-hotkey', this._onTileDown.bind(this));
         _log(`Key bindings added`);
     }
-    padding
+    
     disable() {
         _log(`Disabling ${Me.metadata.name} ${version}`);
 
@@ -66,7 +66,7 @@ class Extension {
         }
         else {
             _log(`Bound ${acceleratorSettingName}: bindingResult=${bindingResult}`)
-        }padding
+        }
     }
 
 
