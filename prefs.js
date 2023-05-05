@@ -35,14 +35,16 @@ function buildPrefsWidget () {
             log('The button was clicked');
 
             log('Creating Gtk.Window');
-//            let dialogGtkWindow = new Gtk.Window({"modal": true, "default-width": 400, "default-height": 200, "resizable": false });
             let dialogGtkWindow = new Gtk.Window({"modal": true, "resizable": false });
 
-            let dialogBox = new Gtk.Box({ "orientation": Gtk.Orientation.VERTICAL, "margin-start": 15, "margin-end": 15, "margin-top": 15, "margin-bottom": 15, "spacing": 25 });
+            let dialogBox = new Gtk.Box({ "orientation": Gtk.Orientation.VERTICAL, "margin-start": 50, "margin-end": 50, "margin-top": 50, "margin-bottom": 50, "spacing": 25 });
             dialogGtkWindow.set_child(dialogBox);
 
-            let dialogLabel = new Gtk.Label({ "label": "Press a key", "vexpand": true });
-            dialogBox.append(dialogLabel);
+            let dialogTextLabel = new Gtk.Label({ "label": "Press a key", "vexpand": true });
+            dialogBox.append(dialogTextLabel);
+
+            let dialogAccelLabel = new Gtk.Label({ "label": "", "vexpand": true });
+            dialogBox.append(dialogAccelLabel);
 
             let eventControllerKey = new Gtk.EventControllerKey();
             dialogGtkWindow.add_controller(eventControllerKey);
@@ -50,10 +52,11 @@ function buildPrefsWidget () {
             eventControllerKey.connect('key-pressed', (_widget, keyval, keycode, state) => {
                 log(`You pressed a key: keyval=${keyval}, keycode=${keycode}, state=${state}`);
                 let mask = state & Gtk.accelerator_get_default_mod_mask();
+                let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
+                log(`Got binding=${binding}`);
+                dialogAccelLabel.set_label(binding);
 
                 if (mask === 0 && keyval === Gdk.KEY_Escape) {
-                    let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
-                    log(`Got binding=${binding}`);
                     dialogGtkWindow.close();
                     return Gdk.EVENT_STOP;
                 }
