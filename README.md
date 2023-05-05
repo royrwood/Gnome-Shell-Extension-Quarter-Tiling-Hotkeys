@@ -167,46 +167,81 @@ https://github.com/paperwm/PaperWM
 
 Sample Gtk4 App:
 
-    #!/usr/bin/env gjs
+#!/usr/bin/env gjs
 
-    imports.gi.versions.Gtk = "4.0";
-    const { GLib, Gtk } = imports.gi;
+imports.gi.versions.Gtk = "4.0";
+const { GLib, Gtk, Gdk } = imports.gi;
 
 
-    function buildPrefsWidget () {
-        let gtkBox = new Gtk.Box({ "height-request": 500, "width-request": 700, "orientation": Gtk.Orientation.VERTICAL });
+function buildPrefsWidget () {
+    let mainGtkBox = new Gtk.Box({ "height-request": 50, "width-request": 70, "orientation": Gtk.Orientation.VERTICAL });
 
-        let gtkListBox = new Gtk.ListBox({ "selection-mode": Gtk.SelectionMode.NONE });
-        gtkBox.append(gtkListBox);
+    let mainGtkFrame = new Gtk.Frame({ "halign": Gtk.Align.CENTER, "margin-start": 25, "margin-end": 25, "margin-top": 25, "margin-bottom": 25 });
+    mainGtkBox.append(mainGtkFrame);
 
-        let gtkRowBox = new Gtk.Box({ "orientation": Gtk.Orientation.HORIZONTAL });
-        gtkListBox.append(gtkRowBox);
+    let mainGtkListBox = new Gtk.ListBox({ "selection-mode": Gtk.SelectionMode.NONE });
+    mainGtkFrame.set_child(mainGtkListBox);
+
+    for (let i = 0; i < 1; i++) {
+        let rowGtkListBoxRow = new Gtk.ListBoxRow();
+        mainGtkListBox.append(rowGtkListBoxRow);
+
+        let rowGtkBox = new Gtk.Box({ "orientation": Gtk.Orientation.HORIZONTAL, "margin-start": 15, "margin-end": 15, "margin-top": 15, "margin-bottom": 15, "spacing": 25 });
+        rowGtkListBoxRow.set_child(rowGtkBox);
 
         let gtkLabel = new Gtk.Label({ "label": "This is some text" });
-        gtkRowBox.append(gtkLabel);
+        rowGtkBox.append(gtkLabel);
 
-        let gtkButton = new Gtk.Button({ "label": "A Button" });
-        gtkRowBox.append(gtkButton);
+        let gtkButton = new Gtk.Button({ "label": "A Button", "hexpand": true, "halign": Gtk.Align.END, "valign": Gtk.Align.CENTER });
+        rowGtkBox.append(gtkButton);
 
         gtkButton.connect('clicked', () => {
             log('The button was clicked');
-        });
 
-        return gtkBox;
+            log('Creating Gtk.Window');
+            let dialogGtkWindow = new Gtk.Window({"modal": true, "resizable": false });
+
+            let dialogBox = new Gtk.Box({ "orientation": Gtk.Orientation.VERTICAL, "margin-start": 15, "margin-end": 15, "margin-top": 15, "margin-bottom": 15, "spacing": 25 });
+            dialogGtkWindow.set_child(dialogBox);
+
+            let dialogLabel = new Gtk.Label({ "label": "Press a key", "vexpand": true });
+            dialogBox.append(dialogLabel);
+
+            let eventControllerKey = new Gtk.EventControllerKey();
+            dialogGtkWindow.add_controller(eventControllerKey);
+
+            eventControllerKey.connect('key-pressed', (_widget, keyval, keycode, state) => {
+                log(`You pressed a key: keyval=${keyval}, keycode=${keycode}, state=${state}`);
+                let mask = state & Gtk.accelerator_get_default_mod_mask();
+
+                if (mask === 0 && keyval === Gdk.KEY_Escape) {
+                    let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
+                    log(`Got binding=${binding}`);
+                    dialogGtkWindow.close();
+                    return Gdk.EVENT_STOP;
+                }
+            });
+
+            dialogGtkWindow.present();
+        });
     }
 
-
-    Gtk.init();
-
-    prefsWidget = buildPrefsWidget()
-
-    let win = new Gtk.Window({ title: 'Hello World', default_width: 300, default_height: 250, });
-    win.connect('close-request', () => { log('close-request emitted'); loop.quit() });
-    win.set_child(prefsWidget);
-    win.present();
+    return mainGtkBox;
+}
 
 
-    let loop = GLib.MainLoop.new(null, false);
-    log('Main loop begin...');
-    loop.run();
-    log('Main loop end.');
+Gtk.init();
+
+prefsWidget = buildPrefsWidget()
+
+let win = new Gtk.Window({ title: 'Hello World', default_width: 300, default_height: 250, });
+win.connect('close-request', () => { log('close-request emitted'); loop.quit() });
+win.set_child(prefsWidget);
+win.present();
+
+
+let loop = GLib.MainLoop.new(null, false);
+
+loop.run();
+
+log('The main loop has completed.');
