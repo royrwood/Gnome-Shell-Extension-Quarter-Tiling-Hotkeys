@@ -1,9 +1,6 @@
-// const GObject = imports.gi.GObject;
-// const Gtk = imports.gi.Gtk;
-
 imports.gi.versions.Gtk = "4.0";
 const { Gtk, Gdk } = imports.gi;
-
+const ExtensionUtils = imports.misc.extensionUtils;
 
 function init () {
     // pass
@@ -18,7 +15,7 @@ function buildPrefsWidget () {
     let mainGtkListBox = new Gtk.ListBox({ "selection-mode": Gtk.SelectionMode.NONE });
     mainGtkFrame.set_child(mainGtkListBox);
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 4; i++) {
         let rowGtkListBoxRow = new Gtk.ListBoxRow();
         mainGtkListBox.append(rowGtkListBoxRow);
 
@@ -56,6 +53,9 @@ function buildPrefsWidget () {
                 log(`Got binding=${binding}`);
                 dialogAccelLabel.set_label(binding);
 
+                settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+                settings.set_strv('tile-left-hotkey', [binding])
+
                 if (mask === 0 && keyval === Gdk.KEY_Escape) {
                     dialogGtkWindow.close();
                     return Gdk.EVENT_STOP;
@@ -68,69 +68,3 @@ function buildPrefsWidget () {
 
     return mainGtkBox;
 }
-
-/*
-  <template class="AwesomeTilesPrefsWidget" parent="GtkBox">
-    <property name="height-request">500</property>
-    <property name="width-request">700</property>
-    <property name="orientation">vertical</property>
-    <property name="baseline-position">top</property>
-    <child>
-      <object class="GtkFrame" id="general">
-        <property name="halign">center</property>
-        <property name="margin-start">36</property>
-        <property name="margin-end">36</property>
-        <property name="margin-top">18</property>
-        <property name="margin-bottom">18</property>
-        <property name="child">
-          <object class="GtkListBox">
-            <property name="selection-mode">none</property>
-
-            <child>
-              <object class="GtkListBoxRow">
-                <property name="child">
-                  <object class="GtkBox">
-                    <property name="margin-start">16</property>
-                    <property name="margin-end">16</property>
-                    <property name="margin-top">16</property>
-                    <property name="margin-bottom">16</property>
-                    <property name="spacing">30</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Align Window to Center</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="valign">center</property>
-                            <property name="halign">start</property>
-                            <property name="label" translatable="yes">Shortcut to align the window in focus to center without resizing it.</property>
-                            <property name="use-markup">1</property>
-                            <property name="wrap">1</property>
-                            <property name="max-width-chars">50</property>
-                            <property name="xalign">0</property>
-                            <style>
-                              <class name="dim-label" />
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="align_window_to_center">
-                        <property name="hexpand">1</property>
-                        <property name="halign">end</property>
-                        <property name="valign">center</property>
-                        <property name="name">shortcut-align-window-to-center</property>
-                        <signal name="clicked" handler="_onAssignShortcut" swapped="no" />
-                      </object>
-                    </child>
-                  </object>
-                </property>
-              </object>
-            </child>
-*/

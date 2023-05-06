@@ -18,6 +18,14 @@ gnome-extensions install --force ${EXTENSION_ID}.zip
 URLs:
 =====
 
+Gnome Shell Extension Preferences Using ADW:
+https://gjs.guide/extensions/development/preferences.html#preferences-window
+
+
+Reddit User Looking for docs:
+https://www.reddit.com/r/gnome/comments/133jb7u/developer_resources_for_libadwaita_adw1_for/
+
+
 Gtk4 Widget Reference:
 https://docs.gtk.org/gtk4/class.Box.html
 

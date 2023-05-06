@@ -25,6 +25,12 @@ class Extension {
 
         this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
+        this._settings.connect('changed::tile-left-hotkey', () => {
+            _log('"tile-left-hotkey" setting changed');
+            // 1. Remove the keybidning if set before
+            // 2. Assign new keybinding with the new value
+        });
+
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey', this._onTileLeft.bind(this));
         this._addKeyBinding('tile-right-hotkey', this._onTileRight.bind(this));
@@ -45,7 +51,7 @@ class Extension {
     }
 
     _addKeyBinding(acceleratorSettingName, callbackFunc) {
-        let keyCombo = this._settings.get_strv(accpaddingeleratorSettingName);
+        let keyCombo = this._settings.get_strv(acceleratorSettingName);
         _log(`Adding key binding '${acceleratorSettingName}'='${keyCombo}'`);
         
         // Meta.KeyBindingFlags.NONE
