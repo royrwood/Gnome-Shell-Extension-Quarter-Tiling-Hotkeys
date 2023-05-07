@@ -2,25 +2,25 @@
 <schemalist>  
   <schema id="org.gnome.shell.extensions.quarter-tiling-hotkeys" path="/org/gnome/shell/extensions/quarter-tiling-hotkeys/">
     <key type="as" name="tile-left-hotkey">
-      <default><![CDATA[['<Control><Super><Alt>left']]]></default>
+      <default><![CDATA[['<Control><Alt><Super>Left']]]></default>
       <summary>Accelerator key combination to tile window left</summary>
       <description>Accelerator key combination to tile window left</description>
     </key>
         
     <key type="as" name="tile-right-hotkey">
-      <default><![CDATA[['<Control><Super><Alt>right']]]></default>
+      <default><![CDATA[['<Control><Alt><Super>Right']]]></default>
       <summary>Accelerator key combination to tile window right</summary>
       <description>Accelerator key combination to tile window right</description>
     </key>
         
     <key type="as" name="tile-up-hotkey">
-      <default><![CDATA[['<Control><Super><Alt>up']]]></default>
+      <default><![CDATA[['<Control><Alt><Super>Up']]]></default>
       <summary>Accelerator key combination to tile window up</summary>
       <description>Accelerator key combination to tile window up</description>
     </key>
         
     <key type="as" name="tile-down-hotkey">
-      <default><![CDATA[['<Control><Super><Alt>down']]]></default>
+      <default><![CDATA[['<Control><Alt><Super>Down']]]></default>
       <summary>Accelerator key combination to tile window down</summary>
       <description>Accelerator key combination to tile window down</description>
     </key>

@@ -18,6 +18,10 @@ gnome-extensions install --force ${EXTENSION_ID}.zip
 URLs:
 =====
 
+Sample Dialog in an extension:
+https://stackoverflow.com/questions/52551694/display-aboutdialog-from-gnome-shell-extension
+
+
 Gnome Shell Extension Preferences Using ADW:
 https://gjs.guide/extensions/development/preferences.html#preferences-window
 
