@@ -25,10 +25,6 @@ class Extension {
 
         this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
-        // this._settings.connect('changed::tile-left-hotkey', () => {
-        //     _log('"tile-left-hotkey" setting changed');
-        // });
-
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey', this._doWindowMoveResize.bind(this, 'LEFT'));
         this._addKeyBinding('tile-right-hotkey', this._doWindowMoveResize.bind(this, 'RIGHT'));
