@@ -1,17 +1,25 @@
 Gnome Shell Extension to Support Quarter Tiling of Windows
 ==========================================================
 
+A Gnome Shell Extension to move and resize the focused application to the four quarters or halves of the current monitor using hotkeys.
 
-Notes:
-======
+There are lots of other great extentions out there that do all of this and more, but this is a nice, simple option, if that's all you're looking for.
 
-gnome-extensions enable roytest@example.com
+
+
+Notes to Myself:
+================
+
+Useful commands:
+================
+
+cd ~/.local/share/gnome-shell/extensions/
+
+gnome-extensions enable quarter-tiling-hotkeys@royrwood-on-github
 
 journalctl /usr/bin/gnome-shell -f
 
-MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested --wayland 2>&1 | grep ROYTEST
-
-gnome-extensions install --force ${EXTENSION_ID}.zip
+MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested --wayland 2>&1 | grep QuarTileKeys
 
 
 
@@ -177,7 +185,18 @@ https://github.com/paperwm/PaperWM
 
 
 
-Sample Gtk4 App:
+Code Tricks:
+============
+
+this._settings.connect('changed::tile-left-hotkey', () => {
+    _log('"tile-left-hotkey" setting changed');
+    // 1. Remove the keybidning if set before
+    // 2. Assign new keybinding with the new value
+});
+
+
+----
+
 
 #!/usr/bin/env gjs
 

@@ -1,8 +1,8 @@
 {
     "name": "Quarter Tiling Hotkeys",
-    "description": "Tile windows using hotkeys",
-    "uuid": "quarter-tiling-hotkeys@example.com",
+    "description": "Move and resize the focused application window using hotkeys",
+    "uuid": "quarter-tiling-hotkeys@royrwood-on-github",
     "shell-version": [
-      "43"
+      "42", "43", "44"
     ]
   }
