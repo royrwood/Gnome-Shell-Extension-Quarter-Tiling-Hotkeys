@@ -23,13 +23,13 @@ class Extension {
     enable() {
         _log(`Enabling ${Me.metadata.name} ${MY_VERSION}`);
 
-        let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+        let myExtensionSettings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
         _log(`Adding key bindings`);
-        this._addKeyBinding('tile-left-hotkey',  settings, this._doWindowMoveResize.bind(this, 'LEFT'));
-        this._addKeyBinding('tile-right-hotkey', settings, this._doWindowMoveResize.bind(this, 'RIGHT'));
-        this._addKeyBinding('tile-up-hotkey',    settings, this._doWindowMoveResize.bind(this, 'TOP'));
-        this._addKeyBinding('tile-down-hotkey',  settings, this._doWindowMoveResize.bind(this, 'BOTTOM'));
+        this._addKeyBinding('tile-left-hotkey',  myExtensionSettings, this._doWindowMoveResize.bind(this, 'LEFT'));
+        this._addKeyBinding('tile-right-hotkey', myExtensionSettings, this._doWindowMoveResize.bind(this, 'RIGHT'));
+        this._addKeyBinding('tile-up-hotkey',    myExtensionSettings, this._doWindowMoveResize.bind(this, 'TOP'));
+        this._addKeyBinding('tile-down-hotkey',  myExtensionSettings, this._doWindowMoveResize.bind(this, 'BOTTOM'));
         _log(`Key bindings added`);
     }
     
