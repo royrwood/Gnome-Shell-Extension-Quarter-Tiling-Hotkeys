@@ -3,6 +3,15 @@ const { Adw, Gtk, Gdk } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 
+var doLogging = true;
+
+var _log = function(msg) {
+	if (doLogging) {
+		console.log(`[QuarTileKeys] ${msg}`);
+	}
+}
+
+
 function init () {
     // pass
 }
@@ -26,9 +35,9 @@ function fillPreferencesWindow(adwPreferencesWindow) {
 
 function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensionSettings, adwPreferencesGroup, adwPreferencesWindow) {
     let currentAcceleratorKeySettingList = myExtensionSettings.get_strv(acceleratorSettingName);
-    log(`currentAcceleratorKeySettingList=${currentAcceleratorKeySettingList}`);
+    _log(`currentAcceleratorKeySettingList=${currentAcceleratorKeySettingList}`);
     let currentAcceleratorKeySetting = currentAcceleratorKeySettingList[0];
-    log(`currentAcceleratorKeySetting=${currentAcceleratorKeySetting}`);
+    _log(`currentAcceleratorKeySetting=${currentAcceleratorKeySetting}`);
 
     let newAcceleratorKeySetting = currentAcceleratorKeySetting;
 
@@ -39,7 +48,7 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
     preferencesActionRow.add_suffix(currentAcceleratorGtkButton);
 
     currentAcceleratorGtkButton.connect('clicked', () => {
-        log(`The ${acceleratorSettingName} button was clicked`);
+        _log(`The ${acceleratorSettingName} button was clicked`);
 
         let gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
 
@@ -50,14 +59,14 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
         gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
 
         gtkMessageDialog.connect("response", (dialog, response) => {
-            log(`Got "response" signal: response=${response}`);
+            _log(`Got "response" signal: response=${response}`);
             gtkMessageDialog.destroy();
 
             if (response === Gtk.ResponseType.OK) {
-                log(`Got response Gtk.ResponseType.OK`);
+                _log(`Got response Gtk.ResponseType.OK`);
                 currentAcceleratorKeySetting = newAcceleratorKeySetting;
                 currentAcceleratorGtkButton.set_label(currentAcceleratorKeySetting);
-                // myExtensionSettings.set_strv(acceleratorSettingName, [binding]);
+                myExtensionSettings.set_strv(acceleratorSettingName, [binding]);
             }
         });
 
@@ -65,7 +74,7 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
         gtkMessageDialog.add_controller(eventControllerKey);
 
         eventControllerKey.connect('key-pressed', (_widget, keyval, keycode, state) => {
-            log(`Key pressed: keyval=${keyval}, keycode=${keycode}, state=${state}`);
+            _log(`Key pressed: keyval=${keyval}, keycode=${keycode}, state=${state}`);
 
             let modifierKeys = state & Gtk.accelerator_get_default_mod_mask();
 
@@ -76,7 +85,7 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
 
             if (Gtk.accelerator_valid(keyval, modifierKeys)) {
                 let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
-                log(`Got binding=${binding}`);
+                _log(`Got binding=${binding}`);
                 newAcceleratorKeySetting = binding;
                 gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
                 gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
