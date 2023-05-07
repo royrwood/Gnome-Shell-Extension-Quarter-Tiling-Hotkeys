@@ -177,6 +177,10 @@ https://github.com/paperwm/PaperWM
 
 
 
+// Main.notify("You pressed the key!")
+
+
+
 Sample Gtk4 App:
 
 #!/usr/bin/env gjs

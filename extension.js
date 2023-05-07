@@ -25,17 +25,15 @@ class Extension {
 
         this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
-        this._settings.connect('changed::tile-left-hotkey', () => {
-            _log('"tile-left-hotkey" setting changed');
-            // 1. Remove the keybidning if set before
-            // 2. Assign new keybinding with the new value
-        });
+        // this._settings.connect('changed::tile-left-hotkey', () => {
+        //     _log('"tile-left-hotkey" setting changed');
+        // });
 
         _log(`Adding key bindings`);
-        this._addKeyBinding('tile-left-hotkey', this._onTileLeft.bind(this));
-        this._addKeyBinding('tile-right-hotkey', this._onTileRight.bind(this));
-        this._addKeyBinding('tile-up-hotkey', this._onTileUp.bind(this));
-        this._addKeyBinding('tile-down-hotkey', this._onTileDown.bind(this));
+        this._addKeyBinding('tile-left-hotkey', this._doWindowMoveResize.bind(this, 'LEFT'));
+        this._addKeyBinding('tile-right-hotkey', this._doWindowMoveResize.bind(this, 'RIGHT'));
+        this._addKeyBinding('tile-up-hotkey', this._doWindowMoveResize.bind(this, 'TOP'));
+        this._addKeyBinding('tile-down-hotkey', this._doWindowMoveResize.bind(this, 'BOTTOM'));
         _log(`Key bindings added`);
     }
     
@@ -73,29 +71,6 @@ class Extension {
         else {
             _log(`Bound ${acceleratorSettingName}: bindingResult=${bindingResult}`)
         }
-    }
-
-
-    // Main.notify("You pressed the key!")
-
-    _onTileLeft() {
-        _log(`Callback _onTileLeft`);
-        this._doWindowMoveResize('LEFT');
-    }
-
-    _onTileRight() {
-        _log("Callback _onTileRight");
-        this._doWindowMoveResize('RIGHT');
-    }
-
-    _onTileUp() {
-        _log("Callback _onTileUp");
-        this._doWindowMoveResize('TOP');
-    }
-
-    _onTileDown() {
-        _log("Callback _onTileDown");
-        this._doWindowMoveResize('BOTTOM');
     }
 
     _doWindowMoveResize(directionStr) {

@@ -3,6 +3,6 @@
     "description": "Tile windows using hotkeys",
     "uuid": "quarter-tiling-hotkeys@example.com",
     "shell-version": [
-      "43"
+      "42", "43"
     ]
   }
