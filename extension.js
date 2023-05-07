@@ -23,7 +23,7 @@ class Extension {
     enable() {
         _log(`Enabling ${Me.metadata.name} ${MY_VERSION}`);
 
-        settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+        let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey',  settings, this._doWindowMoveResize.bind(this, 'LEFT'));
