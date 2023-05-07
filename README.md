@@ -3,12 +3,15 @@ Gnome Shell Extension to Support Quarter Tiling of Windows
 
 A Gnome Shell Extension to move and resize the focused application to the four quarters or halves of the current monitor using hotkeys.
 
-There are lots of other great extentions out there that do all of this and more, but this is a nice, simple option, if that's all you're looking for.
+There are lots of other great extentions out there that do all of this and more, but this is a simple option, if that's all you're looking for.
 
 
 
 Notes to Myself:
 ================
+
+Some notes that were useful during development...
+
 
 Useful commands:
 ================
@@ -26,16 +29,19 @@ MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested
 URLs:
 =====
 
-Sample Dialog in an extension:
-https://stackoverflow.com/questions/52551694/display-aboutdialog-from-gnome-shell-extension
+These need to be better organized...
 
 
-Gnome Shell Extension Preferences Using ADW:
-https://gjs.guide/extensions/development/preferences.html#preferences-window
+Gnome Discussion:
+https://wiki.gnome.org/GettingInTouch/Matrix
 
 
-Reddit User Looking for docs:
-https://www.reddit.com/r/gnome/comments/133jb7u/developer_resources_for_libadwaita_adw1_for/
+Gnome gjs docs:
+https://gjs-docs.gnome.org
+
+
+Gnome Shell Extension How-To:
+https://gjs.guide/extensions/development/creating.html
 
 
 Gtk4 Widget Reference:
@@ -44,10 +50,6 @@ https://docs.gtk.org/gtk4/class.Box.html
 
 Gjs/Gtk4 Example:
 https://gitlab.gnome.org/GNOME/gjs/-/blob/master/examples/gtk4.js
-
-
-Gjs/Gtk4 Book:
-https://rmnvgr.gitlab.io/gtk4-gjs-book/application/
 
 
 Gnome gjs Core Overrides:
@@ -75,17 +77,21 @@ DConf, Gnome Settings, etc:
 https://www.makeuseof.com/access-hidden-gnome-desktop-settings-dconf-editor/
 
 
-Sample Gnome Shell Extension that uses "global.stage.connect":
-https://github.com/GNOME/gnome-shell-extensions/blob/9f88e98d1bfbd5f1b20c574c2c761765ebf1d939/extensions/windowsNavigator/extension.js
-    global.stage.connect('key-press-event', this._onKeyPress.bind(this));
+Sample Dialog in an extension:
+https://stackoverflow.com/questions/52551694/display-aboutdialog-from-gnome-shell-extension
 
 
-Gnome Discussion:
-https://wiki.gnome.org/GettingInTouch/Matrix
+Awesome Tiles:
+https://github.com/velitasali/gnome-shell-extension-awesome-tiles/tree/main/src
 
 
-Gnome Shell Mailing List:
-https://mail.gnome.org/archives/gnome-shell-extensions-list/
+WinTile:
+https://github.com/Captn138/wintile-reloaded
+
+
+
+Reddit User Looking for docs:
+https://www.reddit.com/r/gnome/comments/133jb7u/developer_resources_for_libadwaita_adw1_for/
 
 
 Mutter:
@@ -133,18 +139,6 @@ Why you can't access Gnome Shell internals from a stand-alone app:
 https://mail.gnome.org/archives/javascript-list/2012-January/msg00001.html
 
 
-Awesome Tiles:
-https://github.com/velitasali/gnome-shell-extension-awesome-tiles/tree/main/src
-
-
-WinTile:
-https://github.com/Captn138/wintile-reloaded
-
-
-Gnome Magic Window Keybinding:
-https://github.com/adrienverge/gnome-magic-window
-
-
 More Keyboard Shortcuts:
 https://github.com/matthijskooijman/gnome-shell-more-keyboard-shortcuts
 
@@ -171,10 +165,6 @@ Gnome JS READMEs:
 https://gitlab.gnome.org/GNOME/gjs/-/tree/master/doc
 
 
-Extensions How-To:
-https://gjs.guide/extensions/development/creating.html
-
-
 "Getting started with GNOME Shell extension development":
 https://twiddlingbits.net/gnome-shell-extension-development
 
@@ -185,12 +175,9 @@ https://github.com/paperwm/PaperWM
 
 
 
-// Main.notify("You pressed the key!")
 
-
-
-Code Tricks:
-============
+Code Snippets:
+==============
 
 this._settings.connect('changed::tile-left-hotkey', () => {
     _log('"tile-left-hotkey" setting changed');
@@ -201,7 +188,7 @@ this._settings.connect('changed::tile-left-hotkey', () => {
 
 ----
 
-// Main.notify("You pressed the key!")
+Main.notify("You pressed the key!")
 
 
 ----

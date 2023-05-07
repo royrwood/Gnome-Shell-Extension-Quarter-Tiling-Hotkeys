@@ -5,11 +5,11 @@ const Shell = imports.gi.Shell;
 const Main = imports.ui.main;
 
 
-var doLogging = true;
-var version = "0.1.6";
+var DO_LOGGING = true;
+var MY_VERSION = "0.1.6";
 
 var _log = function(msg) {
-	if (doLogging) {
+	if (DO_LOGGING) {
 		console.log(`[QuarTileKeys] ${msg}`);
 	}
 }
@@ -17,24 +17,24 @@ var _log = function(msg) {
 
 class Extension {
     constructor() {
-        this._settings = null;
+        
     }
 
     enable() {
-        _log(`Enabling ${Me.metadata.name} ${version}`);
+        _log(`Enabling ${Me.metadata.name} ${MY_VERSION}`);
 
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+        settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
         _log(`Adding key bindings`);
-        this._addKeyBinding('tile-left-hotkey', this._doWindowMoveResize.bind(this, 'LEFT'));
-        this._addKeyBinding('tile-right-hotkey', this._doWindowMoveResize.bind(this, 'RIGHT'));
-        this._addKeyBinding('tile-up-hotkey', this._doWindowMoveResize.bind(this, 'TOP'));
-        this._addKeyBinding('tile-down-hotkey', this._doWindowMoveResize.bind(this, 'BOTTOM'));
+        this._addKeyBinding('tile-left-hotkey',  settings, this._doWindowMoveResize.bind(this, 'LEFT'));
+        this._addKeyBinding('tile-right-hotkey', settings, this._doWindowMoveResize.bind(this, 'RIGHT'));
+        this._addKeyBinding('tile-up-hotkey',    settings, this._doWindowMoveResize.bind(this, 'TOP'));
+        this._addKeyBinding('tile-down-hotkey',  settings, this._doWindowMoveResize.bind(this, 'BOTTOM'));
         _log(`Key bindings added`);
     }
     
     disable() {
-        _log(`Disabling ${Me.metadata.name} ${version}`);
+        _log(`Disabling ${Me.metadata.name} ${MY_VERSION}`);
 
         _log(`Removing key bindings`);
         Main.wm.removeKeybinding('tile-left-hotkey');
@@ -44,8 +44,8 @@ class Extension {
         _log(`Key bindings removed`);
     }
 
-    _addKeyBinding(acceleratorSettingName, callbackFunc) {
-        let keyCombo = this._settings.get_strv(acceleratorSettingName);
+    _addKeyBinding(acceleratorSettingName, settings, callbackFunc) {
+        let keyCombo = settings.get_strv(acceleratorSettingName);
         _log(`Adding key binding '${acceleratorSettingName}'='${keyCombo}'`);
         
         // Meta.KeyBindingFlags.NONE
@@ -58,9 +58,9 @@ class Extension {
         // Shell.ActionMode.OVERVIEW
         // Shell.ActionMode.LOCK_SCREEN
         // Shell.ActionMode.ALL
-        let mode = Shell.ActionMode.ALL;
+        let mode = Shell.ActionMode.NORMAL;
 
-        let bindingResult = Main.wm.addKeybinding(acceleratorSettingName, this._settings, flag, mode, callbackFunc);
+        let bindingResult = Main.wm.addKeybinding(acceleratorSettingName, settings, flag, mode, callbackFunc);
         if (bindingResult == Meta.KeyBindingAction.NONE) {
             _log(`Could not bind ${acceleratorSettingName}`)
         }
@@ -199,7 +199,7 @@ class Extension {
 
 
 function init() {
-    _log(`initializing ${Me.metadata.name} ${version}`);
+    _log(`initializing ${Me.metadata.name} ${MY_VERSION}`);
 
     return new Extension();
 }
