@@ -5,10 +5,10 @@ const Shell = imports.gi.Shell;
 const Main = imports.ui.main;
 
 
-var DO_LOGGING = true;
-var MY_VERSION = "1.0.2";
+const DO_LOGGING = true;
+const MY_VERSION = "1.0.2";
 
-var _log = function(msg) {
+const _log = function(msg) {
 	if (DO_LOGGING) {
 		console.log(`[QuarTileKeys] ${msg}`);
 	}
