@@ -59,9 +59,9 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
     let gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
 
     gtkMessageDialog.set_transient_for(adwPreferencesWindow);
-    gtkMessageDialog.add_button("ACCEPT", Gtk.ResponseType.OK);
-    gtkMessageDialog.add_button("DISABLE", 1234);  // We can use any return code greater than zero, so I choose 1234
-    gtkMessageDialog.add_button("CANCEL", Gtk.ResponseType.CANCEL);
+    gtkMessageDialog.add_button("Accept", Gtk.ResponseType.OK);
+    gtkMessageDialog.add_button("Disable", 1234);  // We can use any return code greater than zero, so I choose 1234
+    gtkMessageDialog.add_button("Cancel", Gtk.ResponseType.CANCEL);
     gtkMessageDialog.text = `Choose "${acceleratorDescription}" keyboard accelerator`;
     gtkMessageDialog.secondary_text = currentAcceleratorGtkButton.label;
 
