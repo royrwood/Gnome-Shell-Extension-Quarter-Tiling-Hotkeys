@@ -94,6 +94,9 @@ WinTile:
 https://github.com/Captn138/wintile-reloaded
 
 
+Tiling Assistant
+https://github.com/Leleat/Tiling-Assistant
+
 
 Reddit User Looking for docs:
 https://www.reddit.com/r/gnome/comments/133jb7u/developer_resources_for_libadwaita_adw1_for/
