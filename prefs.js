@@ -39,64 +39,66 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
     let currentAcceleratorKeySetting = currentAcceleratorKeySettingList[0];
     _log(`currentAcceleratorKeySetting=${currentAcceleratorKeySetting}`);
 
-    let newAcceleratorKeySetting = currentAcceleratorKeySetting;
-
     const preferencesActionRow = new Adw.ActionRow({ title: promptText });
     adwPreferencesGroup.add(preferencesActionRow);
 
     let currentAcceleratorGtkButton = new Gtk.Button({ "label": currentAcceleratorKeySetting, "halign": Gtk.Align.CENTER, "valign": Gtk.Align.CENTER });
     preferencesActionRow.add_suffix(currentAcceleratorGtkButton);
 
-    currentAcceleratorGtkButton.connect('clicked', () => {
-        _log(`The ${acceleratorSettingName} button was clicked`);
+    currentAcceleratorGtkButton.connect('clicked', _chooseNewAcceleratorKey.bind(null, adwPreferencesWindow, currentAcceleratorGtkButton, promptText, myExtensionSettings, acceleratorSettingName));
+}
 
-        let gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
 
-        gtkMessageDialog.set_transient_for(adwPreferencesWindow);
-        gtkMessageDialog.add_button("OK", Gtk.ResponseType.OK);
-        gtkMessageDialog.add_button("DISABLE", 100);
-        gtkMessageDialog.add_button("CANCEL", Gtk.ResponseType.CANCEL);
-        gtkMessageDialog.text = `Choose "${promptText}" keyboard accelerator`;
-        gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
+function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkButton, promptText, myExtensionSettings, acceleratorSettingName) {
+    _log(`The ${acceleratorSettingName} button was clicked`);
 
-        gtkMessageDialog.connect("response", (dialog, response) => {
-            _log(`Got "response" signal: response=${response}`);
-            gtkMessageDialog.destroy();
+    let newAcceleratorKeySetting = myExtensionSettings.get_strv(acceleratorSettingName)[0];
 
-            if (response === 100) {
-                _log(`Got response DISABLE`);
-                // TODO: Support disabling the hotkey-- set to [] or ["disabled"]
-                // https://gjs-docs.gnome.org/meta12~12/meta.display#method-add_keybinding
-            }
-            else if (response === Gtk.ResponseType.OK) {
-                _log(`Got response Gtk.ResponseType.OK`);
-                currentAcceleratorKeySetting = newAcceleratorKeySetting;
-                currentAcceleratorGtkButton.set_label(currentAcceleratorKeySetting);
-                myExtensionSettings.set_strv(acceleratorSettingName, [binding]);
-            }
-        });
+    let gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
 
-        let eventControllerKey = new Gtk.EventControllerKey();
-        gtkMessageDialog.add_controller(eventControllerKey);
+    gtkMessageDialog.set_transient_for(adwPreferencesWindow);
+    gtkMessageDialog.add_button("OK", Gtk.ResponseType.OK);
+    gtkMessageDialog.add_button("DISABLE", 100);
+    gtkMessageDialog.add_button("CANCEL", Gtk.ResponseType.CANCEL);
+    gtkMessageDialog.text = `Choose "${promptText}" keyboard accelerator`;
+    gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
 
-        eventControllerKey.connect('key-pressed', (_widget, keyval, keycode, state) => {
-            _log(`Key pressed: keyval=${keyval}, keycode=${keycode}, state=${state}`);
+    gtkMessageDialog.connect("response", (dialog, response) => {
+        _log(`Got "response" signal: response=${response}`);
+        gtkMessageDialog.destroy();
 
-            let modifierKeys = state & Gtk.accelerator_get_default_mod_mask();
-
-            if (modifierKeys === 0 && keyval === Gdk.KEY_Escape) {
-                gtkMessageDialog.close();
-                return Gdk.EVENT_STOP;
-            }
-
-            if (Gtk.accelerator_valid(keyval, modifierKeys)) {
-                let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
-                _log(`Got binding=${binding}`);
-                newAcceleratorKeySetting = binding;
-                gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
-            }
-        });
-
-        gtkMessageDialog.present();
+        if (response === 100) {
+            _log(`Got response DISABLE`);
+            // TODO: Support disabling the hotkey-- set to [] or ["disabled"]
+            // https://gjs-docs.gnome.org/meta12~12/meta.display#method-add_keybinding
+        }
+        else if (response === Gtk.ResponseType.OK) {
+            _log(`Got response Gtk.ResponseType.OK`);
+            currentAcceleratorGtkButton.set_label(newAcceleratorKeySetting);
+            myExtensionSettings.set_strv(acceleratorSettingName, [newAcceleratorKeySetting]);
+        }
     });
+
+    let eventControllerKey = new Gtk.EventControllerKey();
+    gtkMessageDialog.add_controller(eventControllerKey);
+
+    eventControllerKey.connect('key-pressed', (_widget, keyval, keycode, state) => {
+        _log(`Key pressed: keyval=${keyval}, keycode=${keycode}, state=${state}`);
+
+        let modifierKeys = state & Gtk.accelerator_get_default_mod_mask();
+
+        if (modifierKeys === 0 && keyval === Gdk.KEY_Escape) {
+            gtkMessageDialog.close();
+            return Gdk.EVENT_STOP;
+        }
+
+        if (Gtk.accelerator_valid(keyval, modifierKeys)) {
+            let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
+            _log(`Got binding=${binding}`);
+            newAcceleratorKeySetting = binding;
+            gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
+        }
+    });
+
+    gtkMessageDialog.present();
 }

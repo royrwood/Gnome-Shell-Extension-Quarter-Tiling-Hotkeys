@@ -28,8 +28,8 @@ class Extension {
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey',  myExtensionSettings, this._doWindowMoveResize.bind(this, 'LEFT'));
         this._addKeyBinding('tile-right-hotkey', myExtensionSettings, this._doWindowMoveResize.bind(this, 'RIGHT'));
-        this._addKeyBinding('tile-up-hotkey',    myExtensionSettings, this._doWindowMoveResize.bind(this, 'TOP'));
-        this._addKeyBinding('tile-down-hotkey',  myExtensionSettings, this._doWindowMoveResize.bind(this, 'BOTTOM'));
+        this._addKeyBinding('tile-up-hotkey',    myExtensionSettings, this._doWindowMoveResize.bind(this, 'UP'));
+        this._addKeyBinding('tile-down-hotkey',  myExtensionSettings, this._doWindowMoveResize.bind(this, 'DOWN'));
         _log(`Key bindings added`);
     }
     
@@ -101,7 +101,7 @@ class Extension {
 
         let x, y, width, height;
     
-        if (directionStr == 'TOP') {
+        if (directionStr == 'UP') {
             // Default is to fill the top half of the monitor
             x = workspaceArea.x;
             y = workspaceArea.y;
@@ -123,7 +123,7 @@ class Extension {
                 height = Math.round(workspaceArea.height / 2);
             }
         }
-        else if (directionStr == 'BOTTOM') {
+        else if (directionStr == 'DOWN') {
             // Default is to fill the bottom half of the monitor
             x = workspaceArea.x;
             y = workspaceArea.y + Math.round(workspaceArea.height / 2);
