@@ -16,13 +16,18 @@ Some notes that were useful during development...
 Useful commands:
 ================
 
-cd ~/.local/share/gnome-shell/extensions/
+glib-compile-schemas schemas/
+
+cp -v *.{js,json,css} ~/.local/share/gnome-shell/extensions/quarter-tiling-hotkeys\@royrwood-on-github/ && cp -v ./schemas/* ~/.local/share/gnome-shell/extensions/quarter-tiling-hotkeys\@royrwood-on-github/schemas/
+
+MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested --wayland 2>&1 | grep QuarTileKeys
 
 gnome-extensions enable quarter-tiling-hotkeys@royrwood-on-github
 
+ls -l ~/.local/share/gnome-shell/extensions/
+
 journalctl /usr/bin/gnome-shell -f
 
-MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested --wayland 2>&1 | grep QuarTileKeys
 
 
 

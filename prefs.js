@@ -18,7 +18,7 @@ function init () {
 
 
 function fillPreferencesWindow(adwPreferencesWindow) {
-    let extensionGIOSettings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+    const extensionGIOSettings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
     // Add a preferences page + group + row for each accelerator key
 
@@ -36,14 +36,14 @@ function fillPreferencesWindow(adwPreferencesWindow) {
 
 
 function _addAcceleratorKeyPrefRow(acceleratorDescription, acceleratorSettingName, extensionGIOSettings, adwPreferencesGroup, adwPreferencesWindow) {
-    let currentAcceleratorKeySetting = extensionGIOSettings.get_strv(acceleratorSettingName)[0];
+    const currentAcceleratorKeySetting = extensionGIOSettings.get_strv(acceleratorSettingName)[0];
     _log(`currentAcceleratorKeySetting=${currentAcceleratorKeySetting}`);
 
     // Add a preferences row with a label and a button showing the current setting
     const preferencesActionRow = new Adw.ActionRow({ title: acceleratorDescription });
     adwPreferencesGroup.add(preferencesActionRow);
 
-    let currentAcceleratorGtkButton = new Gtk.Button({ "label": currentAcceleratorKeySetting, "halign": Gtk.Align.CENTER, "valign": Gtk.Align.CENTER });
+    const currentAcceleratorGtkButton = new Gtk.Button({ "label": currentAcceleratorKeySetting, "halign": Gtk.Align.CENTER, "valign": Gtk.Align.CENTER });
     preferencesActionRow.add_suffix(currentAcceleratorGtkButton);
 
     // When the user clicks the button, allow them to choose a new accelerator key
@@ -56,7 +56,7 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
 
     // Show a dialog to allow the user to pick a new accelerator key, or disable the action
 
-    let gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
+    const gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
 
     gtkMessageDialog.set_transient_for(adwPreferencesWindow);
     gtkMessageDialog.add_button("Accept", Gtk.ResponseType.OK);
@@ -71,13 +71,13 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
 
         if (response === 1234) {
             _log(`Got response DISABLE`);
-            let newAcceleratorKeySetting = "disabled";
+            const newAcceleratorKeySetting = "disabled";
             currentAcceleratorGtkButton.set_label(newAcceleratorKeySetting);
             extensionGIOSettings.set_strv(acceleratorSettingName, [newAcceleratorKeySetting]);
         }
         else if (response === Gtk.ResponseType.OK) {
             _log(`Got response Gtk.ResponseType.OK`);
-            let newAcceleratorKeySetting = gtkMessageDialog.secondary_text;  // The EventControllerKey stored the new binding in the secondary_text (see below)
+            const newAcceleratorKeySetting = gtkMessageDialog.secondary_text;  // The EventControllerKey stored the new binding in the secondary_text (see below)
             currentAcceleratorGtkButton.set_label(newAcceleratorKeySetting);
             extensionGIOSettings.set_strv(acceleratorSettingName, [newAcceleratorKeySetting]);
         }
@@ -86,16 +86,16 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
     });
 
     // Add an EventControllerKey so we can get keypress events in the dialog
-    let eventControllerKey = new Gtk.EventControllerKey();
+    const eventControllerKey = new Gtk.EventControllerKey();
     gtkMessageDialog.add_controller(eventControllerKey);
 
     eventControllerKey.connect('key-pressed', (_widget, keyval, keycode, state) => {
         _log(`Key pressed: keyval=${keyval}, keycode=${keycode}, state=${state}`);
 
-        let modifierKeys = state & Gtk.accelerator_get_default_mod_mask();
+        const modifierKeys = state & Gtk.accelerator_get_default_mod_mask();
 
         if (Gtk.accelerator_valid(keyval, modifierKeys)) {
-            let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
+            const binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
             _log(`Got binding=${binding}`);
             gtkMessageDialog.secondary_text = binding; // The outer code will grab the new binding from here when the dialog closes (see above)
         }
