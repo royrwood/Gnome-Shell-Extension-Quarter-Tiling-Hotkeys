@@ -23,7 +23,7 @@ class Extension {
     enable() {
         _log(`Enabling ${Me.metadata.name} ${MY_VERSION}`);
 
-        let myExtensionSettings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
+        const myExtensionSettings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
         _log(`Adding key bindings`);
         this._addKeyBinding('tile-left-hotkey',  myExtensionSettings, this._doWindowMoveResize.bind(this, 'LEFT'));
@@ -45,22 +45,22 @@ class Extension {
     }
 
     _addKeyBinding(acceleratorSettingName, settings, callbackFunc) {
-        let keyCombo = settings.get_strv(acceleratorSettingName);
+        const keyCombo = settings.get_strv(acceleratorSettingName);
         _log(`Adding key binding '${acceleratorSettingName}'='${keyCombo}'`);
         
         // Meta.KeyBindingFlags.NONE
         // Meta.KeyBindingFlags.PER_WINDOW
         // Meta.KeyBindingFlags.BUILTIN
         // Meta.KeyBindingFlags.IGNORE_AUTOREPEAT
-        let flag = Meta.KeyBindingFlags.NONE;
+        const flag = Meta.KeyBindingFlags.NONE;
 
         // Shell.ActionMode.NORMAL
         // Shell.ActionMode.OVERVIEW
         // Shell.ActionMode.LOCK_SCREEN
         // Shell.ActionMode.ALL
-        let mode = Shell.ActionMode.NORMAL;
+        const mode = Shell.ActionMode.NORMAL;
 
-        let bindingResult = Main.wm.addKeybinding(acceleratorSettingName, settings, flag, mode, callbackFunc);
+        const bindingResult = Main.wm.addKeybinding(acceleratorSettingName, settings, flag, mode, callbackFunc);
         if (bindingResult == Meta.KeyBindingAction.NONE) {
             _log(`Could not bind ${acceleratorSettingName}`)
         }
@@ -70,31 +70,31 @@ class Extension {
     }
 
     _doWindowMoveResize(directionStr) {
-        let appWindow = global.display.focus_window;
-        let appFrameRect = appWindow.get_frame_rect()
-        let curMonitor = appWindow.get_monitor();
-        let workspace = appWindow.get_workspace()
-        let workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
+        const appWindow = global.display.focus_window;
+        const appFrameRect = appWindow.get_frame_rect()
+        const curMonitor = appWindow.get_monitor();
+        const workspace = appWindow.get_workspace()
+        const workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
     
-        let centerX = workspaceArea.x + Math.round(workspaceArea.width / 2);
-        let leftX = appFrameRect.x;
-        let rightX = appFrameRect.x + appFrameRect.width;
-        let windowMostlyLeft = (centerX - leftX) > (rightX - centerX);
+        const centerX = workspaceArea.x + Math.round(workspaceArea.width / 2);
+        const leftX = appFrameRect.x;
+        const rightX = appFrameRect.x + appFrameRect.width;
+        const windowMostlyLeft = (centerX - leftX) > (rightX - centerX);
     
-        let centerY = workspaceArea.y + Math.round(workspaceArea.height / 2);
-        let topY = appFrameRect.y;
-        let bottomY = appFrameRect.y + appFrameRect.height;
-        let windowMostlyTop = (centerY - topY) > (bottomY - centerY);
+        const centerY = workspaceArea.y + Math.round(workspaceArea.height / 2);
+        const topY = appFrameRect.y;
+        const bottomY = appFrameRect.y + appFrameRect.height;
+        const windowMostlyTop = (centerY - topY) > (bottomY - centerY);
 
         // The "<= 1" handles odd dimensions (e.g. workspaceArea.height=1053 on a 1080p display)
-        let isAlignedLeft = appFrameRect.x == workspaceArea.x;
-        let isAlignedTop = appFrameRect.y == workspaceArea.y;
-        let isAlignedRight = Math.abs((appFrameRect.x + appFrameRect.width) - (workspaceArea.x + workspaceArea.width)) <= 1;
-        let isAlignedBottom = Math.abs((appFrameRect.y + appFrameRect.height) - (workspaceArea.y + workspaceArea.height)) <= 1;
-        let isFullWidth = Math.abs(appFrameRect.width - workspaceArea.width) <= 1;
-        let isFullHeight = Math.abs(appFrameRect.height - workspaceArea.height) <= 1;
-        let isHalfWidth = Math.abs(appFrameRect.width - Math.round(workspaceArea.width / 2)) <= 1;
-        let isHalfHeight = Math.abs(appFrameRect.height - Math.round(workspaceArea.height / 2)) <= 1;
+        const isAlignedLeft = appFrameRect.x == workspaceArea.x;
+        const isAlignedTop = appFrameRect.y == workspaceArea.y;
+        const isAlignedRight = Math.abs((appFrameRect.x + appFrameRect.width) - (workspaceArea.x + workspaceArea.width)) <= 1;
+        const isAlignedBottom = Math.abs((appFrameRect.y + appFrameRect.height) - (workspaceArea.y + workspaceArea.height)) <= 1;
+        const isFullWidth = Math.abs(appFrameRect.width - workspaceArea.width) <= 1;
+        const isFullHeight = Math.abs(appFrameRect.height - workspaceArea.height) <= 1;
+        const isHalfWidth = Math.abs(appFrameRect.width - Math.round(workspaceArea.width / 2)) <= 1;
+        const isHalfHeight = Math.abs(appFrameRect.height - Math.round(workspaceArea.height / 2)) <= 1;
     
         _log(`Flags: appFrameRect.x=${appFrameRect.x}, appFrameRect.y=${appFrameRect.y}, appFrameRect.width=${appFrameRect.width}, appFrameRect.height=${appFrameRect.height}`)
         _log(`Flags: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`)
