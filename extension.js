@@ -1,9 +1,8 @@
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Meta = imports.gi.Meta;
-const Shell = imports.gi.Shell;
-const Main = imports.ui.main;
+const { extensionUtils: ExtensionUtils } = imports.misc;
+const { Meta, Shell } = imports.gi;
+const { main: Main } = imports.ui;
 
+const Me = ExtensionUtils.getCurrentExtension();
 
 const DO_LOGGING = true;
 const MY_VERSION = "1.0.2";

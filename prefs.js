@@ -1,6 +1,6 @@
 imports.gi.versions.Gtk = "4.0";
 const { Adw, Gtk, Gdk } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
+const { extensionUtils: ExtensionUtils } = imports.misc;
 
 
 var DO_LOGGING = true;
