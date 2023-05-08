@@ -3,10 +3,10 @@ const { Adw, Gtk, Gdk } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 
-var doLogging = true;
+var DO_LOGGING = true;
 
 var _log = function(msg) {
-	if (doLogging) {
+	if (DO_LOGGING) {
 		console.log(`[QuarTileKeys] ${msg}`);
 	}
 }

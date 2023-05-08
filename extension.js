@@ -86,6 +86,7 @@ class Extension {
         let bottomY = appFrameRect.y + appFrameRect.height;
         let windowMostlyTop = (centerY - topY) > (bottomY - centerY);
 
+        // The "<= 1" handles odd dimensions (e.g. workspaceArea.height=1053 on a 1080p display)
         let isAlignedLeft = appFrameRect.x == workspaceArea.x;
         let isAlignedTop = appFrameRect.y == workspaceArea.y;
         let isAlignedRight = Math.abs((appFrameRect.x + appFrameRect.width) - (workspaceArea.x + workspaceArea.width)) <= 1;
@@ -98,6 +99,7 @@ class Extension {
         _log(`Flags: appFrameRect.x=${appFrameRect.x}, appFrameRect.y=${appFrameRect.y}, appFrameRect.width=${appFrameRect.width}, appFrameRect.height=${appFrameRect.height}`)
         _log(`Flags: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`)
         _log(`Flags: isAlignedTop=${isAlignedTop}, isAlignedBottom=${isAlignedBottom}, isAlignedLeft=${isAlignedLeft}, isAlignedRight=${isAlignedRight} isHalfWidth=${isHalfWidth} isHalfHeight=${isHalfHeight}`)
+        _log(`Flags: windowMostlyLeft=${windowMostlyLeft}, windowMostlyTop=${windowMostlyTop}, isFullWidth=${isFullWidth}, isFullHeight=${isFullHeight}`)
 
         let x, y, width, height;
     
