@@ -52,8 +52,6 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
 function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkButton, promptText, myExtensionSettings, acceleratorSettingName) {
     _log(`The ${acceleratorSettingName} button was clicked`);
 
-    let newAcceleratorKeySetting = myExtensionSettings.get_strv(acceleratorSettingName)[0];
-
     let gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
 
     gtkMessageDialog.set_transient_for(adwPreferencesWindow);
@@ -61,7 +59,7 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
     gtkMessageDialog.add_button("DISABLE", 100);
     gtkMessageDialog.add_button("CANCEL", Gtk.ResponseType.CANCEL);
     gtkMessageDialog.text = `Choose "${promptText}" keyboard accelerator`;
-    gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
+    gtkMessageDialog.secondary_text = myExtensionSettings.get_strv(acceleratorSettingName)[0];
 
     gtkMessageDialog.connect("response", (dialog, response) => {
         _log(`Got "response" signal: response=${response}`);
@@ -74,6 +72,7 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
         }
         else if (response === Gtk.ResponseType.OK) {
             _log(`Got response Gtk.ResponseType.OK`);
+            let newAcceleratorKeySetting = gtkMessageDialog.secondary_text;
             currentAcceleratorGtkButton.set_label(newAcceleratorKeySetting);
             myExtensionSettings.set_strv(acceleratorSettingName, [newAcceleratorKeySetting]);
         }
@@ -95,8 +94,7 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
         if (Gtk.accelerator_valid(keyval, modifierKeys)) {
             let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
             _log(`Got binding=${binding}`);
-            newAcceleratorKeySetting = binding;
-            gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
+            gtkMessageDialog.secondary_text = binding;
         }
     });
 
