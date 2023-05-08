@@ -66,6 +66,7 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
             if (response === 100) {
                 _log(`Got response DISABLE`);
                 // TODO: Support disabling the hotkey-- set to [] or ["disabled"]
+                // https://gjs-docs.gnome.org/meta12~12/meta.display#method-add_keybinding
             }
             else if (response === Gtk.ResponseType.OK) {
                 _log(`Got response Gtk.ResponseType.OK`);
