@@ -54,6 +54,7 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
 
         gtkMessageDialog.set_transient_for(adwPreferencesWindow);
         gtkMessageDialog.add_button("OK", Gtk.ResponseType.OK);
+        gtkMessageDialog.add_button("DISABLE", 100);
         gtkMessageDialog.add_button("CANCEL", Gtk.ResponseType.CANCEL);
         gtkMessageDialog.text = `Choose "${promptText}" keyboard accelerator`;
         gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
@@ -62,7 +63,11 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
             _log(`Got "response" signal: response=${response}`);
             gtkMessageDialog.destroy();
 
-            if (response === Gtk.ResponseType.OK) {
+            if (response === 100) {
+                _log(`Got response DISABLE`);
+                // TODO: Support disabling the hotkey-- set to [] or ["disabled"]
+            }
+            else if (response === Gtk.ResponseType.OK) {
                 _log(`Got response Gtk.ResponseType.OK`);
                 currentAcceleratorKeySetting = newAcceleratorKeySetting;
                 currentAcceleratorGtkButton.set_label(currentAcceleratorKeySetting);
@@ -87,7 +92,6 @@ function _addAcceleratorKeyPrefRow(promptText, acceleratorSettingName, myExtensi
                 let binding = Gtk.accelerator_name_with_keycode(null, keyval, keycode, modifierKeys);
                 _log(`Got binding=${binding}`);
                 newAcceleratorKeySetting = binding;
-                gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
                 gtkMessageDialog.secondary_text = newAcceleratorKeySetting;
             }
         });
