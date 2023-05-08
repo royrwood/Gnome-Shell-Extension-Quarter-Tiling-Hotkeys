@@ -20,7 +20,7 @@ function init () {
 function fillPreferencesWindow(adwPreferencesWindow) {
     let extensionGIOSettings = ExtensionUtils.getSettings('org.gnome.shell.extensions.quarter-tiling-hotkeys');
 
-    // Add a preferences page + group + rows for each accelerator key
+    // Add a preferences page + group + row for each accelerator key
 
     const acceleratorKeysPrefPage = new Adw.PreferencesPage();
     adwPreferencesWindow.add(acceleratorKeysPrefPage);
@@ -36,9 +36,7 @@ function fillPreferencesWindow(adwPreferencesWindow) {
 
 
 function _addAcceleratorKeyPrefRow(acceleratorDescription, acceleratorSettingName, extensionGIOSettings, adwPreferencesGroup, adwPreferencesWindow) {
-    let currentAcceleratorKeySettingList = extensionGIOSettings.get_strv(acceleratorSettingName);
-    _log(`currentAcceleratorKeySettingList=${currentAcceleratorKeySettingList}`);
-    let currentAcceleratorKeySetting = currentAcceleratorKeySettingList[0];
+    let currentAcceleratorKeySetting = extensionGIOSettings.get_strv(acceleratorSettingName)[0];
     _log(`currentAcceleratorKeySetting=${currentAcceleratorKeySetting}`);
 
     // Add a preferences row with a label and a button showing the current setting

@@ -6,7 +6,7 @@ const Main = imports.ui.main;
 
 
 var DO_LOGGING = true;
-var MY_VERSION = "0.1.6";
+var MY_VERSION = "1.0.2";
 
 var _log = function(msg) {
 	if (DO_LOGGING) {
