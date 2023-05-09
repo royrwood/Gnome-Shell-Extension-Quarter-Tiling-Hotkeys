@@ -1,6 +1,12 @@
-imports.gi.versions.Gtk = "4.0";
+imports.gi.versions.Gtk = '4.0';
+
 const { Adw, Gtk, Gdk } = imports.gi;
 const { extensionUtils: ExtensionUtils } = imports.misc;
+const { format: Format, gettext: Gettext } = imports;
+
+const Me = ExtensionUtils.getCurrentExtension();
+const Domain = Gettext.domain(Me.metadata.uuid);
+const _ = Domain.gettext;
 
 
 var DO_LOGGING = true;
@@ -13,7 +19,7 @@ var _log = function(msg) {
 
 
 function init () {
-    // pass
+    ExtensionUtils.initTranslations(Me.metadata.uuid);
 }
 
 
@@ -28,10 +34,10 @@ function fillPreferencesWindow(adwPreferencesWindow) {
     const acceleratorKeysPrefGroup = new Adw.PreferencesGroup();
     acceleratorKeysPrefPage.add(acceleratorKeysPrefGroup);
 
-    _addAcceleratorKeyPrefRow("Tile Left", "tile-left-hotkey", extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
-    _addAcceleratorKeyPrefRow("Tile Right", "tile-right-hotkey", extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
-    _addAcceleratorKeyPrefRow("Tile Up", "tile-up-hotkey", extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
-    _addAcceleratorKeyPrefRow("Tile Down", "tile-down-hotkey", extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
+    _addAcceleratorKeyPrefRow(_('Tile Left'), 'tile-left-hotkey', extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
+    _addAcceleratorKeyPrefRow(_('Tile Right'), 'tile-right-hotkey', extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
+    _addAcceleratorKeyPrefRow(_('Tile Up'), 'tile-up-hotkey', extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
+    _addAcceleratorKeyPrefRow(_('Tile Down'), 'tile-down-hotkey', extensionGIOSettings, acceleratorKeysPrefGroup, adwPreferencesWindow);
 }
 
 
@@ -43,7 +49,7 @@ function _addAcceleratorKeyPrefRow(acceleratorDescription, acceleratorSettingNam
     const preferencesActionRow = new Adw.ActionRow({ title: acceleratorDescription });
     adwPreferencesGroup.add(preferencesActionRow);
 
-    const currentAcceleratorGtkButton = new Gtk.Button({ "label": currentAcceleratorKeySetting, "halign": Gtk.Align.CENTER, "valign": Gtk.Align.CENTER });
+    const currentAcceleratorGtkButton = new Gtk.Button({ 'label': currentAcceleratorKeySetting, 'halign': Gtk.Align.CENTER, 'valign': Gtk.Align.CENTER });
     preferencesActionRow.add_suffix(currentAcceleratorGtkButton);
 
     // When the user clicks the button, allow them to choose a new accelerator key
@@ -56,22 +62,22 @@ function _chooseNewAcceleratorKey(adwPreferencesWindow, currentAcceleratorGtkBut
 
     // Show a dialog to allow the user to pick a new accelerator key, or disable the action
 
-    const gtkMessageDialog = new Gtk.MessageDialog({"modal": true});
+    const gtkMessageDialog = new Gtk.MessageDialog({'modal': true});
 
     gtkMessageDialog.set_transient_for(adwPreferencesWindow);
-    gtkMessageDialog.add_button("Accept", Gtk.ResponseType.OK);
-    gtkMessageDialog.add_button("Disable", 1234);  // We can use any return code greater than zero, so I choose 1234
-    gtkMessageDialog.add_button("Cancel", Gtk.ResponseType.CANCEL);
-    gtkMessageDialog.text = `Choose "${acceleratorDescription}" keyboard accelerator`;
+    gtkMessageDialog.add_button(_('Accept'), Gtk.ResponseType.OK);
+    gtkMessageDialog.add_button(_('Disable'), 1234);  // We can use any return code greater than zero, so I choose 1234
+    gtkMessageDialog.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
+    gtkMessageDialog.text = Format.vprintf(_('Choose "%s" keyboard accelerator'), [acceleratorDescription]);
     gtkMessageDialog.secondary_text = currentAcceleratorGtkButton.label;
 
     // When the dialog completes, do the right thing wrt the button the user clicked
-    gtkMessageDialog.connect("response", (dialog, response) => {
-        _log(`Got "response" signal: response=${response}`);
+    gtkMessageDialog.connect('response', (dialog, response) => {
+        _log(`Got 'response' signal: response=${response}`);
 
         if (response === 1234) {
             _log(`Got response DISABLE`);
-            const newAcceleratorKeySetting = "disabled";
+            const newAcceleratorKeySetting = 'disabled';
             currentAcceleratorGtkButton.set_label(newAcceleratorKeySetting);
             extensionGIOSettings.set_strv(acceleratorSettingName, [newAcceleratorKeySetting]);
         }

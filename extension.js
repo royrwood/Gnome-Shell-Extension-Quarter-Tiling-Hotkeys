@@ -1,11 +1,22 @@
 const { extensionUtils: ExtensionUtils } = imports.misc;
 const { Meta, Shell } = imports.gi;
 const { main: Main } = imports.ui;
+const { format: Format, gettext: Gettext } = imports;
 
 const Me = ExtensionUtils.getCurrentExtension();
+const Domain = Gettext.domain(Me.metadata.uuid);
+const _ = Domain.gettext;
 
 const DO_LOGGING = true;
 const MY_VERSION = "1.0.2";
+
+
+function init() {
+    _log(`initializing ${Me.metadata.name} ${MY_VERSION}`);
+
+    return new Extension();
+}
+
 
 const _log = function(msg) {
 	if (DO_LOGGING) {
@@ -196,11 +207,4 @@ class Extension {
         appWindow.move_resize_frame(true, x, y, width, height);
         _log("move_resize_frame after")
     }
-}
-
-
-function init() {
-    _log(`initializing ${Me.metadata.name} ${MY_VERSION}`);
-
-    return new Extension();
 }
