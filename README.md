@@ -3,7 +3,7 @@ Gnome Shell Extension to Support Quarter Tiling of Windows
 
 A Gnome Shell Extension to move and resize the focused application to the four quarters or halves of the current monitor using hotkeys.
 
-There are lots of other great extentions out there that do all of this and more, but this is a simple option, if that's all you're looking for.
+There are lots of other great extensions out there that do all of this and more, but this is a simple option, if that's all you're looking for.
 
 
 
