@@ -30,12 +30,48 @@ journalctl /usr/bin/gnome-shell -f
 
 
 
+Sample Extensions:
+==================
+
+Awesome Tiles:
+https://github.com/velitasali/gnome-shell-extension-awesome-tiles/tree/main/src
+
+
+WinTile:
+https://github.com/Captn138/wintile-reloaded
+
+
+ShellTile:
+https://github.com/emasab/shelltile
+
+
+Tiling Gnome:
+https://github.com/rliang/gnome-shell-extension-tilingnome
+
+
+Tiling Assistant
+https://github.com/Leleat/Tiling-Assistant
+
+
+Simple Tile:
+https://github.com/ledbettj/simple-tile
+
+
+Useless Gaps:
+https://github.com/mipmip/gnome-shell-extensions-useless-gaps
+
+
+More Keyboard Shortcuts:
+https://github.com/matthijskooijman/gnome-shell-more-keyboard-shortcuts
+
+
+
+
 
 URLs:
 =====
 
 These need to be better organized...
-
 
 Gnome Discussion:
 https://wiki.gnome.org/GettingInTouch/Matrix
@@ -82,20 +118,12 @@ DConf, Gnome Settings, etc:
 https://www.makeuseof.com/access-hidden-gnome-desktop-settings-dconf-editor/
 
 
+Gnome Shell Extension Reference:
+https://github.com/julio641742/gnome-shell-extension-reference
+
+
 Sample Dialog in an extension:
 https://stackoverflow.com/questions/52551694/display-aboutdialog-from-gnome-shell-extension
-
-
-Awesome Tiles:
-https://github.com/velitasali/gnome-shell-extension-awesome-tiles/tree/main/src
-
-
-WinTile:
-https://github.com/Captn138/wintile-reloaded
-
-
-Tiling Assistant
-https://github.com/Leleat/Tiling-Assistant
 
 
 Reddit User Looking for docs:
@@ -139,20 +167,8 @@ Mutter keybindings.c:
 https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/core/keybindings.c
 
 
-PaperWM Notes:
-https://github.com/paperwm/PaperWM/blob/develop/notes.org
-
-
 Why you can't access Gnome Shell internals from a stand-alone app:
 https://mail.gnome.org/archives/javascript-list/2012-January/msg00001.html
-
-
-More Keyboard Shortcuts:
-https://github.com/matthijskooijman/gnome-shell-more-keyboard-shortcuts
-
-
-Some sample extension with key bindings and window monkey business:
-https://gist.github.com/reusee/c8dbba4d2172352870a8e0349fd1b2f1
 
 
 Gnome Shell Extensions Source / Examples:
