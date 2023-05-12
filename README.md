@@ -87,6 +87,10 @@ Gnome Shell Extension How-To:
 https://gjs.guide/extensions/development/creating.html
 
 
+Gjs Guide:
+https://gjs.guide/guides/
+
+
 Gtk4 Widget Reference:
 https://docs.gtk.org/gtk4/class.Box.html
 
@@ -207,8 +211,6 @@ Code Snippets:
 
 this._settings.connect('changed::tile-left-hotkey', () => {
     _log('"tile-left-hotkey" setting changed');
-    // 1. Remove the keybidning if set before
-    // 2. Assign new keybinding with the new value
 });
 
 
