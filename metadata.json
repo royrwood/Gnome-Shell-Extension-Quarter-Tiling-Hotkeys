@@ -2,7 +2,7 @@
     "name": "Quarter Tiling Hotkeys",
     "description": "Move and resize the focused application window using hotkeys",
     "uuid": "quarter-tiling-hotkeys@royrwood-on-github",
-    "shell-version": [
-      "42", "43", "44"
-    ]
+    "version": 1,
+    "shell-version": ["42", "43", "44"],
+    "url": "https://github.com/royrwood/Gnome-Shell-Extension-Quarter-Tiling-Hotkeys"
   }

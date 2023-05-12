@@ -7,8 +7,8 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Domain = Gettext.domain(Me.metadata.uuid);
 const _ = Domain.gettext;
 
-const DO_LOGGING = true;
-const MY_VERSION = "1.0.2";
+const DO_LOGGING = false;
+const MY_VERSION = "1";
 
 
 function init() {
@@ -81,10 +81,10 @@ class Extension {
 
     _doWindowMoveResize(directionStr) {
         const appWindow = global.display.focus_window;
-        const appFrameRect = appWindow.get_frame_rect()
+        const appFrameRect = appWindow.get_frame_rect();
         const curMonitor = appWindow.get_monitor();
-        const workspace = appWindow.get_workspace()
-        const workspaceArea = workspace.get_work_area_for_monitor(curMonitor)
+        const workspace = appWindow.get_workspace();
+        const workspaceArea = workspace.get_work_area_for_monitor(curMonitor);
     
         const centerX = workspaceArea.x + Math.round(workspaceArea.width / 2);
         const leftX = appFrameRect.x;
@@ -106,10 +106,10 @@ class Extension {
         const isHalfWidth = Math.abs(appFrameRect.width - Math.round(workspaceArea.width / 2)) <= 1;
         const isHalfHeight = Math.abs(appFrameRect.height - Math.round(workspaceArea.height / 2)) <= 1;
     
-        _log(`Flags: appFrameRect.x=${appFrameRect.x}, appFrameRect.y=${appFrameRect.y}, appFrameRect.width=${appFrameRect.width}, appFrameRect.height=${appFrameRect.height}`)
-        _log(`Flags: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`)
-        _log(`Flags: isAlignedTop=${isAlignedTop}, isAlignedBottom=${isAlignedBottom}, isAlignedLeft=${isAlignedLeft}, isAlignedRight=${isAlignedRight} isHalfWidth=${isHalfWidth} isHalfHeight=${isHalfHeight}`)
-        _log(`Flags: windowMostlyLeft=${windowMostlyLeft}, windowMostlyTop=${windowMostlyTop}, isFullWidth=${isFullWidth}, isFullHeight=${isFullHeight}`)
+        _log(`Flags: appFrameRect.x=${appFrameRect.x}, appFrameRect.y=${appFrameRect.y}, appFrameRect.width=${appFrameRect.width}, appFrameRect.height=${appFrameRect.height}`);
+        _log(`Flags: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`);
+        _log(`Flags: isAlignedTop=${isAlignedTop}, isAlignedBottom=${isAlignedBottom}, isAlignedLeft=${isAlignedLeft}, isAlignedRight=${isAlignedRight} isHalfWidth=${isHalfWidth} isHalfHeight=${isHalfHeight}`);
+        _log(`Flags: windowMostlyLeft=${windowMostlyLeft}, windowMostlyTop=${windowMostlyTop}, isFullWidth=${isFullWidth}, isFullHeight=${isFullHeight}`);
 
         let x, y, width, height;
     
@@ -202,9 +202,9 @@ class Extension {
             }
         }
     
-        _log(`Calling move_resize_frame(${x}, ${y}, ${width}, ${height})`)
-        appWindow.unmaximize(Meta.MaximizeFlags.BOTH)
+        _log(`Calling move_resize_frame(${x}, ${y}, ${width}, ${height})`);
+        appWindow.unmaximize(Meta.MaximizeFlags.BOTH);
         appWindow.move_resize_frame(true, x, y, width, height);
-        _log("move_resize_frame after")
+        _log("move_resize_frame after");
     }
 }

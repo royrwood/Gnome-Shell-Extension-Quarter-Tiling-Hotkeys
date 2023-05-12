@@ -9,7 +9,7 @@ const Domain = Gettext.domain(Me.metadata.uuid);
 const _ = Domain.gettext;
 
 
-var DO_LOGGING = true;
+var DO_LOGGING = false;
 
 var _log = function(msg) {
 	if (DO_LOGGING) {
