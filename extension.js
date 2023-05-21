@@ -318,6 +318,7 @@ class Extension {
                 _log('RIGHT: move resize');
                 x = workspaceCenterX;
                 y = frameTopY;
+                width = workspaceHalfWidth;
                 height = frameHeight;
                 maximizeFlags = 0;
                 action = 'RIGHT RESIZE';
@@ -327,6 +328,7 @@ class Extension {
                 _log('RIGHT: resize vertical');
                 x = workspaceCenterX;
                 y = workspaceTopY;
+                width = workspaceHalfWidth;
                 height = workspaceHeight;
                 maximizeFlags = Meta.MaximizeFlags.VERTICAL;
                 action = 'RIGHT HALF';
