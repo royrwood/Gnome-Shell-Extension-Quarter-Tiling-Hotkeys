@@ -22,7 +22,7 @@ cp -v *.{js,json,css} ~/.local/share/gnome-shell/extensions/quarter-tiling-hotke
 
 glib-compile-schemas schemas/ && cp -v *.{js,json,css} ~/.local/share/gnome-shell/extensions/quarter-tiling-hotkeys\@royrwood-on-github/ && cp -rv ./schemas ~/.local/share/gnome-shell/extensions/quarter-tiling-hotkeys\@royrwood-on-github/ && cp -rv po ~/.local/share/gnome-shell/extensions/quarter-tiling-hotkeys\@royrwood-on-github/
 
-MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested --wayland 2>&1 | grep QuarTileKeys
+MUTTER_DEBUG_DUMMY_MODE_SPECS=1500x1000 dbus-run-session -- gnome-shell --nested --wayland 2>&1 | grep QuarTileKeys
 
 gnome-extensions enable quarter-tiling-hotkeys@royrwood-on-github
 

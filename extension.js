@@ -8,7 +8,7 @@ const Domain = Gettext.domain(Me.metadata.uuid);
 const _ = Domain.gettext;
 
 const DO_LOGGING = true;
-const MY_VERSION = "1";
+const MY_VERSION = "1.1.0";
 
 
 function init() {
@@ -44,6 +44,15 @@ class Extension {
 
         _log('Connecting to window-created signal');
         global.display.connect('window-created', this._windowCreatedCallback.bind(this));
+
+        const allWindows = global.display.list_all_windows();
+        if (allWindows) {
+            _log(`Connecting to move/resize signals for ${allWindows.length} existing windows`);
+            allWindows.forEach(window => {
+                _log(`Connecting to move/resize signals for window ${window}`);
+                this._windowCreatedCallback(global.display, window);
+            });
+        }
     }
     
     disable() {
@@ -87,7 +96,7 @@ class Extension {
         }
     }
 
-    _windowCreatedCallback(display, window) {
+    _windowCreatedCallback(_display, window) {
         const windowFrameRect = window.get_frame_rect();
         _log(`WindowCreated Callback: windowFrameRect=${JSON.stringify(windowFrameRect)}`);
 
@@ -170,13 +179,14 @@ class Extension {
         const workspaceHalfWidth = Math.floor(workspaceWidth / 2);
         const workspaceHalfHeight = Math.floor(workspaceHeight / 2);
         const workspaceLeftX = workspaceArea.x;
-        const workspaceCenterX = workspaceLeftX + workspaceHalfWidth;
         const workspaceRightX = workspaceLeftX + workspaceWidth;
+        const workspaceCenterX = workspaceRightX - workspaceHalfWidth;
         const workspaceTopY = workspaceArea.y;
-        const workspaceCenterY = workspaceTopY + workspaceHalfHeight;
         const workspaceBottomY = workspaceTopY + workspaceHeight;
+        const workspaceCenterY = workspaceBottomY - workspaceHalfHeight;
 
         // The "<= 1" handles odd dimensions (e.g. workspaceArea.height=1053 on a 1080p display)
+        // TODO: Maybe not needed, now that I'm aligning to the bottom/right edges?
         const isXAlignedLeft = frameLeftX == workspaceLeftX;
         const isXAlignedCenter = Math.abs(frameLeftX - workspaceCenterX) <= 1;
         const isXAlignedRight = frameRightX == workspaceRightX;
@@ -194,54 +204,70 @@ class Extension {
         let maximizeFlags = 0;
         let action = directionStr;
 
-        if (directionStr == 'DOWN') {
+        if (directionStr == 'UP') {
+            // If y is not aligned to the top edge, move it to top without resizing
+            if (!isYAlignedTop) {
+                _log('UP: move');
+                x = frameLeftX;
+                y = workspaceTopY;
+                width = frameWidth;
+                height = frameHeight;
+                maximizeFlags = 0;
+                action = 'UP MOVE';
+            }
+            // If height is not half-height, resize it to half-height
+            // Make sure the last action was not "UP RESIZE" in order to avoid repeated resizing of terminal windows that don't fully resize
+            else if (previousAction !== 'UP RESIZE' && frameHeight !== workspaceHalfHeight) {
+                _log('UP: resize');
+                x = frameLeftX;
+                y = frameTopY;
+                width = frameWidth;
+                height = workspaceHalfHeight;
+                maximizeFlags = 0;
+                action = 'UP RESIZE';
+            }
+            // Default is to fill the top half of the monitor
+            else {
+                _log('UP: resize horizontal');
+                x = workspaceLeftX;
+                y = workspaceTopY;
+                width = workspaceWidth;
+                height = workspaceHalfHeight;
+                maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
+                action = 'UP HALF';
+            }
+        }
+        else if (directionStr == 'DOWN') {
             // If y is not aligned to the bottom, move it to bottom without resizing
             // Make sure the last action was not "DOWN" in order to avoid toggling up and down for terminal windows that don't fully resize
-            if (previousAction !== 'DOWN' && !isYAlignedBottom) {
-                _log('DOWN: move, no resize');
+            if (previousAction !== 'DOWN RESIZE' && !isYAlignedBottom) {
+                _log('DOWN: move');
                 x = frameLeftX;
                 y = workspaceBottomY - frameHeight;
                 width = frameWidth;
                 height = frameHeight;
                 maximizeFlags = 0;
+                action = 'DOWN MOVE';
             }
             // If y is not aligned to the center, move it and resize it
             else if (!isYAlignedCenter) {
-                _log('DOWN: move, resize');
+                _log('DOWN: move resize');
                 x = frameLeftX;
                 y = workspaceCenterY;
                 width = frameWidth;
                 height = workspaceHalfHeight;
                 maximizeFlags = 0;
+                action = 'DOWN RESIZE';
             }
             // Default is to fill the bottom half of the monitor
             else {
-                _log('DOWN: default to half');
+                _log('DOWN: resize horizontal');
                 x = workspaceLeftX;
                 y = workspaceCenterY;
                 width = workspaceWidth;
                 height = workspaceHalfHeight;
                 maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
-            }
-        }
-        else if (directionStr == 'UP') {
-            // If y is not aligned to the top edge, move it and resize to half-height
-            if (!isYAlignedTop) {
-                _log('UP: resize');
-                x = frameLeftX;
-                y = workspaceTopY;
-                width = frameWidth;
-                height = workspaceHalfHeight;
-                maximizeFlags = 0;
-            }
-            // Default is to fill the top half of the monitor
-            else {
-                _log('UP: half');
-                x = workspaceLeftX;
-                y = workspaceTopY;
-                width = workspaceWidth;
-                height = workspaceHalfHeight;
-                maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
+                action = 'DOWN HALF';
             }
         }
         else if (directionStr == 'LEFT') {
