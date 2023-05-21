@@ -239,7 +239,7 @@ class Extension {
         }
         else if (directionStr == 'DOWN') {
             // If y is not aligned to the bottom, move it to bottom without resizing
-            // Make sure the last action was not "DOWN" in order to avoid toggling up and down for terminal windows that don't fully resize
+            // Make sure the last action was not "DOWN RESIZE" in order to avoid repeated resizing for terminal windows that don't fully resize
             if (previousAction !== 'DOWN RESIZE' && !isYAlignedBottom) {
                 _log('DOWN: move');
                 x = frameLeftX;
@@ -271,55 +271,86 @@ class Extension {
             }
         }
         else if (directionStr == 'LEFT') {
-            // If x is not aligned to the left edge, move it to left and resize to half-width
+            // If x is not aligned to the left edge, move it to left without resizing
             if (!isXAlignedLeft) {
-                _log('LEFT: resize');
+                _log('LEFT: move');
                 x = workspaceLeftX;
                 y = frameTopY;
-                width = workspaceHalfWidth;height
-                height = frameHeight
+                width = frameWidth;
+                height = frameHeight;
                 maximizeFlags = 0;
+                action = 'LEFT MOVE';
+            }
+            // If widthg is not half-width, resize it to half-width
+            // Make sure the last action was not "LEFT RESIZE" in order to avoid repeated resizing of terminal windows that don't fully resize
+            else if (previousAction !== 'LEFT RESIZE' && frameWidth !== workspaceHalfWidth) {
+                _log('LEFT: resize');
+                x = frameLeftX;
+                y = frameTopY;
+                width = workspaceHalfWidth;
+                height = frameHeight;
+                maximizeFlags = 0;
+                action = 'LEFT RESIZE';
             }
             // Default is to fill the left half of the monitor
             else {
-                _log('LEFT: half');
+                _log('LEFT: resize vertical');
                 x = workspaceLeftX;
                 y = workspaceTopY;
                 width = workspaceHalfWidth;
                 height = workspaceHeight;
                 maximizeFlags = Meta.MaximizeFlags.VERTICAL;
+                action = 'LEFT HALF';
             }
         }
         else if (directionStr == 'RIGHT') {
-            // If x is not aligned to the center, move it to right and resize to half-width
-            if (!isXAlignedCenter) {
-                _log('RIGHT: resize');
+            // If x is not aligned to the right, move it to right without resizing
+            // Make sure the last action was not "RIGHT RESIZE" in order to avoid repeated resizing for terminal windows that don't fully resize
+            if (previousAction !== 'RIGHT RESIZE' && !isXAlignedRight) {
+                _log('RIGHT: move');
+                x = workspaceRightX - frameWidth;
+                y = frameTopY;
+                width = frameWidth;
+                height = frameHeight;
+                maximizeFlags = 0;
+                action = 'RIGHT MOVE';
+            }
+            // If x is not aligned to the center, move it and resize it
+            else if (!isXAlignedCenter) {
+                _log('RIGHT: move resize');
                 x = workspaceCenterX;
                 y = frameTopY;
                 width = workspaceHalfWidth;
                 height = frameHeight;
                 maximizeFlags = 0;
+                action = 'RIGHT RESIZE';
             }
-            // Default is to fill the bottom half of the monitor
+            // Default is to fill the right half of the monitor
             else {
-                _log('RIGHT: half');
+                _log('RIGHT: resize vertical');
                 x = workspaceCenterX;
                 y = workspaceTopY;
                 width = workspaceHalfWidth;
                 height = workspaceHeight;
                 maximizeFlags = Meta.MaximizeFlags.VERTICAL;
+                action = 'RIGHT HALF';
             }
         }
     
-        if (maximizeFlags) {
-            if (currentMaximizeFlags != 0 && currentMaximizeFlags != maximizeFlags) {
+        if (currentMaximizeFlags !== maximizeFlags) {
+            const clearMaximizeFlag = currentMaximizeFlags & ~maximizeFlags;
+            _log(`Hotkey Callback: currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}, clearMaximizeFlag=${clearMaximizeFlag})`);
+
+            if (currentMaximizeFlags !== 0 && clearMaximizeFlag !== 0) {
                 const clearMaximizeFlag = Meta.MaximizeFlags.BOTH & ~maximizeFlags;
                 _log(`Hotkey Callback: Calling unmaximize(${clearMaximizeFlag}); currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}`);
                 window.unmaximize(clearMaximizeFlag);
             }
 
-            _log(`Hotkey Callback: Calling appWindow.maximize(${maximizeFlags})`);
-            window.maximize(maximizeFlags);
+            if (maximizeFlags !== 0) {
+                _log(`Hotkey Callback: Calling appWindow.maximize(${maximizeFlags})`);
+                window.maximize(maximizeFlags);
+            }
         }
 
         // window.qtileInfo.expectMove = (x !== frameLeftX || y !== frameTopY || maximizeFlags !== 0);
