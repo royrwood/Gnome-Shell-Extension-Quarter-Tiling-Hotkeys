@@ -216,8 +216,8 @@ class Extension {
                 action = 'UP MOVE';
             }
             // If height is not half-height, resize it to half-height
-            // Make sure the last action was not "UP RESIZE" in order to avoid repeated resizing of terminal windows that don't fully resize
-            else if (previousAction !== 'UP RESIZE' && frameHeight !== workspaceHalfHeight) {
+            // Make sure the last action was not "UP" in order to avoid repeated resizing of terminal windows that don't fully resize
+            else if (frameHeight !== workspaceHalfHeight && !previousAction.startsWith('UP')) {
                 _log('UP: resize');
                 x = frameLeftX;
                 y = frameTopY;
@@ -239,8 +239,8 @@ class Extension {
         }
         else if (directionStr == 'DOWN') {
             // If y is not aligned to the bottom, move it to bottom without resizing
-            // Make sure the last action was not "DOWN RESIZE" in order to avoid repeated resizing for terminal windows that don't fully resize
-            if (previousAction !== 'DOWN RESIZE' && !isYAlignedBottom) {
+            // Make sure the last action was not "DOWN" in order to avoid repeated resizing for terminal windows that don't fully resize
+            if (!isYAlignedBottom && !previousAction.startsWith('DOWN')) {
                 _log('DOWN: move');
                 x = frameLeftX;
                 y = workspaceBottomY - frameHeight;
@@ -283,7 +283,7 @@ class Extension {
             }
             // If widthg is not half-width, resize it to half-width
             // Make sure the last action was not "LEFT RESIZE" in order to avoid repeated resizing of terminal windows that don't fully resize
-            else if (previousAction !== 'LEFT RESIZE' && frameWidth !== workspaceHalfWidth) {
+            else if (frameWidth !== workspaceHalfWidth && !previousAction.startsWith('LEFT')) {
                 _log('LEFT: resize');
                 x = frameLeftX;
                 y = frameTopY;
@@ -305,8 +305,8 @@ class Extension {
         }
         else if (directionStr == 'RIGHT') {
             // If x is not aligned to the right, move it to right without resizing
-            // Make sure the last action was not "RIGHT RESIZE" in order to avoid repeated resizing for terminal windows that don't fully resize
-            if (previousAction !== 'RIGHT RESIZE' && !isXAlignedRight) {
+            // Make sure the last action was not "RIGHT" in order to avoid repeated resizing for terminal windows that don't fully resize
+            if (!isXAlignedRight && !previousAction.startsWith('RIGHT')) {
                 _log('RIGHT: move');
                 x = workspaceRightX - frameWidth;
                 y = frameTopY;
@@ -337,19 +337,24 @@ class Extension {
             }
         }
     
-        if (currentMaximizeFlags !== maximizeFlags) {
-            const clearMaximizeFlag = currentMaximizeFlags & ~maximizeFlags;
-            _log(`Hotkey Callback: currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}, clearMaximizeFlag=${clearMaximizeFlag})`);
+        // if (currentMaximizeFlags !== maximizeFlags) {
+        //     const clearMaximizeFlag = currentMaximizeFlags & ~maximizeFlags;
+        //     _log(`Hotkey Callback: currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}, clearMaximizeFlag=${clearMaximizeFlag})`);
 
-            if (clearMaximizeFlag !== 0) {
-                _log(`Hotkey Callback: Calling unmaximize(${clearMaximizeFlag}); currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}`);
-                window.unmaximize(clearMaximizeFlag);
-            }
+        //     if (clearMaximizeFlag !== 0) {
+        //         _log(`Hotkey Callback: Calling unmaximize(${clearMaximizeFlag}); currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}`);
+        //         window.unmaximize(clearMaximizeFlag);
+        //     }
 
-            if (maximizeFlags !== 0) {
-                _log(`Hotkey Callback: Calling appWindow.maximize(${maximizeFlags})`);
-                window.maximize(maximizeFlags);
-            }
+        //     if (maximizeFlags !== 0) {
+        //         _log(`Hotkey Callback: Calling appWindow.maximize(${maximizeFlags})`);
+        //         window.maximize(maximizeFlags);
+        //     }
+        // }
+
+        if (currentMaximizeFlags) {
+            _log(`Hotkey Callback: Calling unmaximize(${currentMaximizeFlags})`);
+            window.unmaximize(currentMaximizeFlags);
         }
 
         // window.qtileInfo.expectMove = (x !== frameLeftX || y !== frameTopY || maximizeFlags !== 0);
