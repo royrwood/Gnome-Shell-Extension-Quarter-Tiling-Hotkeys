@@ -74,7 +74,6 @@ class Extension {
                 y: 0, 
                 width: 0, 
                 height: 0, 
-                maximizeFlags: 0,
                 expectMove: false,
                 expectResize: false
             };
@@ -191,15 +190,13 @@ class Extension {
         const isYAlignedTop = frameTopY == workspaceTopY;
         const isYAlignedCenter = frameTopY == workspaceCenterY;
         const isYAlignedBottom = frameBottomY == workspaceBottomY;
-        const currentMaximizeFlags = window.get_maximized();
 
         _log(`Hotkey Callback: windowQTileInfo=${JSON.stringify(windowQTileInfo)}`)
         _log(`Hotkey Callback: windowFrameRect.x=${windowFrameRect.x}, windowFrameRect.y=${windowFrameRect.y}, windowFrameRect.width=${windowFrameRect.width}, windowFrameRect.height=${windowFrameRect.height}`);
         _log(`Hotkey Callback: workspaceArea.x=${workspaceArea.x}, workspaceArea.y=${workspaceArea.y}, workspaceArea.width=${workspaceArea.width}, workspaceArea.height=${workspaceArea.height}`);
-        _log(`Hotkey Callback: currentMaximizeFlags=${currentMaximizeFlags}, isYAlignedTop=${isYAlignedTop}, isYAlignedCenter=${isYAlignedCenter}, isYAlignedBottom=${isYAlignedBottom}, isXAlignedLeft=${isXAlignedLeft}, isXAlignedCenter=${isXAlignedCenter}`);
+        _log(`Hotkey Callback: isYAlignedTop=${isYAlignedTop}, isYAlignedCenter=${isYAlignedCenter}, isYAlignedBottom=${isYAlignedBottom}, isXAlignedLeft=${isXAlignedLeft}, isXAlignedCenter=${isXAlignedCenter}`);
 
         let x, y, width, height;
-        let maximizeFlags = 0;
         let action = directionStr;
 
         if (directionStr == 'UP') {
@@ -210,7 +207,6 @@ class Extension {
                 y = workspaceTopY;
                 width = frameWidth;
                 height = frameHeight;
-                maximizeFlags = 0;
                 action = 'UP MOVE';
             }
             // If height is not half-height, resize it to half-height
@@ -221,7 +217,6 @@ class Extension {
                 y = frameTopY;
                 width = frameWidth;
                 height = workspaceHalfHeight;
-                maximizeFlags = 0;
                 action = 'UP RESIZE';
             }
             // Default is to fill the top half of the monitor
@@ -231,7 +226,6 @@ class Extension {
                 y = workspaceTopY;
                 width = workspaceWidth;
                 height = workspaceHalfHeight;
-                maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
                 action = 'UP HALF';
             }
         }
@@ -244,7 +238,6 @@ class Extension {
                 y = workspaceBottomY - frameHeight;
                 width = frameWidth;
                 height = frameHeight;
-                maximizeFlags = 0;
                 action = 'DOWN MOVE';
             }
             // If y is not aligned to the center, move it and resize it
@@ -254,7 +247,6 @@ class Extension {
                 y = workspaceCenterY;
                 width = frameWidth;
                 height = workspaceHalfHeight;
-                maximizeFlags = 0;
                 action = 'DOWN RESIZE';
             }
             // Default is to fill the bottom half of the monitor
@@ -264,7 +256,6 @@ class Extension {
                 y = workspaceCenterY;
                 width = workspaceWidth;
                 height = workspaceHalfHeight;
-                maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
                 action = 'DOWN HALF';
             }
         }
@@ -276,7 +267,6 @@ class Extension {
                 y = frameTopY;
                 width = frameWidth;
                 height = frameHeight;
-                maximizeFlags = 0;
                 action = 'LEFT MOVE';
             }
             // If width is not half-width, resize it to half-width
@@ -287,7 +277,6 @@ class Extension {
                 y = frameTopY;
                 width = workspaceHalfWidth;
                 height = frameHeight;
-                maximizeFlags = 0;
                 action = 'LEFT RESIZE';
             }
             // Default is to fill the left half of the monitor
@@ -297,7 +286,6 @@ class Extension {
                 y = workspaceTopY;
                 width = workspaceHalfWidth;
                 height = workspaceHeight;
-                maximizeFlags = Meta.MaximizeFlags.VERTICAL;
                 action = 'LEFT HALF';
             }
         }
@@ -310,7 +298,6 @@ class Extension {
                 y = frameTopY;
                 width = frameWidth;
                 height = frameHeight;
-                maximizeFlags = 0;
                 action = 'RIGHT MOVE';
             }
             // If x is not aligned to the center, move it and resize it
@@ -320,7 +307,6 @@ class Extension {
                 y = frameTopY;
                 width = workspaceHalfWidth;
                 height = frameHeight;
-                maximizeFlags = 0;
                 action = 'RIGHT RESIZE';
             }
             // Default is to fill the right half of the monitor
@@ -330,33 +316,16 @@ class Extension {
                 y = workspaceTopY;
                 width = workspaceHalfWidth;
                 height = workspaceHeight;
-                maximizeFlags = Meta.MaximizeFlags.VERTICAL;
                 action = 'RIGHT HALF';
             }
         }
     
-        // if (currentMaximizeFlags !== maximizeFlags) {
-        //     const clearMaximizeFlag = currentMaximizeFlags & ~maximizeFlags;
-        //     _log(`Hotkey Callback: currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}, clearMaximizeFlag=${clearMaximizeFlag})`);
-
-        //     if (clearMaximizeFlag !== 0) {
-        //         _log(`Hotkey Callback: Calling unmaximize(${clearMaximizeFlag}); currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}`);
-        //         window.unmaximize(clearMaximizeFlag);
-        //     }
-
-        //     if (maximizeFlags !== 0) {
-        //         _log(`Hotkey Callback: Calling appWindow.maximize(${maximizeFlags})`);
-        //         window.maximize(maximizeFlags);
-        //     }
-        // }
-
+        const currentMaximizeFlags = window.get_maximized();
         if (currentMaximizeFlags) {
             _log(`Hotkey Callback: Calling unmaximize(${currentMaximizeFlags})`);
             window.unmaximize(currentMaximizeFlags);
         }
 
-        // window.qtileInfo.expectMove = (x !== frameLeftX || y !== frameTopY || maximizeFlags !== 0);
-        // window.qtileInfo.expectResize = (width !== frameWidth || height !== frameHeight || maximizeFlags !== 0);
         const expectMove = (x != frameLeftX || y != frameTopY);
         const expectResize = (width != frameWidth || height != frameHeight);
 
@@ -365,7 +334,6 @@ class Extension {
         window.qtileInfo.y = y;
         window.qtileInfo.width = width;
         window.qtileInfo.height = height;
-        window.qtileInfo.maximizeFlags = maximizeFlags;
         window.qtileInfo.expectMove = expectMove;
         window.qtileInfo.expectResize = expectResize;
         _log(`Hotkey Callback: Set window.qtileInfo=${JSON.stringify(window.qtileInfo)}`)
