@@ -341,8 +341,7 @@ class Extension {
             const clearMaximizeFlag = currentMaximizeFlags & ~maximizeFlags;
             _log(`Hotkey Callback: currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}, clearMaximizeFlag=${clearMaximizeFlag})`);
 
-            if (currentMaximizeFlags !== 0 && clearMaximizeFlag !== 0) {
-                const clearMaximizeFlag = Meta.MaximizeFlags.BOTH & ~maximizeFlags;
+            if (clearMaximizeFlag !== 0) {
                 _log(`Hotkey Callback: Calling unmaximize(${clearMaximizeFlag}); currentMaximizeFlags=${currentMaximizeFlags}, maximizeFlags=${maximizeFlags}`);
                 window.unmaximize(clearMaximizeFlag);
             }
