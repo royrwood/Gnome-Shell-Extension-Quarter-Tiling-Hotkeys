@@ -176,16 +176,14 @@ class Extension {
 
         const workspaceWidth = workspaceArea.width;
         const workspaceHeight = workspaceArea.height;
-        const workspaceLeftHalfWidth = Math.ceil(workspaceWidth / 2);  // Round up, in case of odd value for workspaceWidth
-        const workspaceRightHalfWidth = Math.floor(workspaceWidth / 2);  // Round down, in case of odd value for workspaceWidth
-        const workspaceTopHalfHeight = Math.ceil(workspaceHeight / 2);  // Round up, in case of odd value for workspaceHeight
-        const workspaceBottomHalfHeight = Math.floor(workspaceHeight / 2);  // Round down, in case of odd value for workspaceHeight
+        const workspaceHalfWidth = Math.floor(workspaceWidth / 2);  // Round down for odd number width/height
+        const workspaceHalfHeight = Math.floor(workspaceHeight / 2);  // Round down for odd number width/height
         const workspaceLeftX = workspaceArea.x;
         const workspaceRightX = workspaceLeftX + workspaceWidth;
-        const workspaceCenterX = workspaceLeftX + workspaceLeftHalfWidth;
+        const workspaceCenterX = workspaceLeftX + Math.ceil(workspaceWidth / 2);  // Round up for odd number width/height (i.e. leave a one-pixel gap in the center)
         const workspaceTopY = workspaceArea.y;
         const workspaceBottomY = workspaceTopY + workspaceHeight;
-        const workspaceCenterY = workspaceTopY + workspaceTopHalfHeight;
+        const workspaceCenterY = workspaceTopY + Math.ceil(workspaceHeight / 2);  // Round up for odd number width/height (i.e. leave a one-pixel gap in the center)
 
         const isXAlignedLeft = frameLeftX == workspaceLeftX;
         const isXAlignedCenter = frameLeftX == workspaceCenterX;
@@ -217,12 +215,12 @@ class Extension {
             }
             // If height is not half-height, resize it to half-height
             // Make sure the last action was not "UP" in order to avoid repeated resizing of terminal windows that don't fully resize
-            else if (frameHeight !== workspaceTopHalfHeight && !previousAction.startsWith('UP')) {
+            else if (frameHeight !== workspaceHalfHeight && !previousAction.startsWith('UP')) {
                 _log('UP: resize');
                 x = frameLeftX;
                 y = frameTopY;
                 width = frameWidth;
-                height = workspaceTopHalfHeight;
+                height = workspaceHalfHeight;
                 maximizeFlags = 0;
                 action = 'UP RESIZE';
             }
@@ -232,7 +230,7 @@ class Extension {
                 x = workspaceLeftX;
                 y = workspaceTopY;
                 width = workspaceWidth;
-                height = workspaceTopHalfHeight;
+                height = workspaceHalfHeight;
                 maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
                 action = 'UP HALF';
             }
@@ -255,7 +253,7 @@ class Extension {
                 x = frameLeftX;
                 y = workspaceCenterY;
                 width = frameWidth;
-                height = workspaceBottomHalfHeight;
+                height = workspaceHalfHeight;
                 maximizeFlags = 0;
                 action = 'DOWN RESIZE';
             }
@@ -265,7 +263,7 @@ class Extension {
                 x = workspaceLeftX;
                 y = workspaceCenterY;
                 width = workspaceWidth;
-                height = workspaceBottomHalfHeight;
+                height = workspaceHalfHeight;
                 maximizeFlags = Meta.MaximizeFlags.HORIZONTAL;
                 action = 'DOWN HALF';
             }
@@ -283,11 +281,11 @@ class Extension {
             }
             // If width is not half-width, resize it to half-width
             // Make sure the last action was not "LEFT RESIZE" in order to avoid repeated resizing of terminal windows that don't fully resize
-            else if (frameWidth !== workspaceLeftHalfWidth && !previousAction.startsWith('LEFT')) {
+            else if (frameWidth !== workspaceHalfWidth && !previousAction.startsWith('LEFT')) {
                 _log('LEFT: resize');
                 x = frameLeftX;
                 y = frameTopY;
-                width = workspaceLeftHalfWidth;
+                width = workspaceHalfWidth;
                 height = frameHeight;
                 maximizeFlags = 0;
                 action = 'LEFT RESIZE';
@@ -297,7 +295,7 @@ class Extension {
                 _log('LEFT: resize vertical');
                 x = workspaceLeftX;
                 y = workspaceTopY;
-                width = workspaceLeftHalfWidth;
+                width = workspaceHalfWidth;
                 height = workspaceHeight;
                 maximizeFlags = Meta.MaximizeFlags.VERTICAL;
                 action = 'LEFT HALF';
@@ -320,7 +318,6 @@ class Extension {
                 _log('RIGHT: move resize');
                 x = workspaceCenterX;
                 y = frameTopY;
-                width = workspaceRightHalfWidth;
                 height = frameHeight;
                 maximizeFlags = 0;
                 action = 'RIGHT RESIZE';
@@ -330,7 +327,6 @@ class Extension {
                 _log('RIGHT: resize vertical');
                 x = workspaceCenterX;
                 y = workspaceTopY;
-                width = workspaceRightHalfWidth;
                 height = workspaceHeight;
                 maximizeFlags = Meta.MaximizeFlags.VERTICAL;
                 action = 'RIGHT HALF';
